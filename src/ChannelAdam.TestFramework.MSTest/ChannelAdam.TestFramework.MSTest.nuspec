@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ChannelAdam.TestFramework.MSTest</id>
+    <version>$version$</version>
+    <title>ChannelAdam Test Framework Library for MSTest</title>
+    <authors>Adam Craven</authors>
+    <owners>Adam Craven</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://channeladamtestframeworks.codeplex.com</projectUrl>
+    <iconUrl>https://devzone.channeladam.com/img/channeladam/channeladam-logo.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>https://DevZone.ChannelAdam.com presents a foundational automated testing library designed to make it easier to implement test cases with MSTest and to read their output.</description>
+    <releaseNotes>Initial release.</releaseNotes>
+    <copyright>Copyright 2014 Adam Craven</copyright>
+    <tags>Tests Unit Integration Moq MSTest</tags>
+  </metadata>
+</package>
