@@ -9,9 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ChannelAdam.TestFramework.MSTest</RootNamespace>
     <AssemblyName>ChannelAdam.TestFramework.MSTest</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>87ba574b</NuGetPackageImportStamp>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,10 +42,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ChannelAdam.Core">
-      <HintPath>..\packages\ChannelAdam.Core.1.0.0.0\lib\net45\ChannelAdam.Core.dll</HintPath>
+      <HintPath>..\packages\ChannelAdam.Core.1.1.0\lib\net40\ChannelAdam.Core.dll</HintPath>
     </Reference>
     <Reference Include="ChannelAdam.TestFramework">
-      <HintPath>..\packages\ChannelAdam.TestFramework.1.0.0.0\lib\net45\ChannelAdam.TestFramework.dll</HintPath>
+      <HintPath>..\packages\ChannelAdam.TestFramework.1.1.0\lib\net40\ChannelAdam.TestFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Moq">
