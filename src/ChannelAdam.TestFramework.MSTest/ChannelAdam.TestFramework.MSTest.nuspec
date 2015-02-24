@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ChannelAdam.TestFramework.MSTest</id>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <title>ChannelAdam Test Framework Library for MSTest</title>
     <authors>Adam Craven</authors>
     <owners>Adam Craven</owners>
@@ -12,13 +12,14 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>https://DevZone.ChannelAdam.com presents a foundational automated testing library designed to make it easier to implement test cases with MSTest and to read their output.</description>
     <releaseNotes>
+1.1.1 - Update to ChannelAdam.TestFramework 1.1.1
 1.1.0 - Added support for targeting .NET Framework 4.0 in addition to .NET Framework 4.5.
 1.0.0 - Initial release targeting .NET Framework 4.5.
     </releaseNotes>
     <copyright>Copyright 2014-2015 Adam Craven</copyright>
     <tags>Tests Unit Integration Moq MSTest</tags>
     <dependencies>
-      <dependency id="ChannelAdam.TestFramework" version="1.1.0" />
+      <dependency id="ChannelAdam.TestFramework" version="1.1.1" />
     </dependencies>
   </metadata>
   <files>

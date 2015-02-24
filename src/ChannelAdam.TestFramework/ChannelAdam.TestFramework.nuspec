@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ChannelAdam.TestFramework</id>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <title>ChannelAdam Test Framework Library</title>
     <authors>Adam Craven</authors>
     <owners>Adam Craven</owners>
@@ -12,6 +12,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>https://DevZone.ChannelAdam.com presents a foundational automated testing library designed to make it easier to implement test cases and to read their output.</description>
     <releaseNotes>
+1.1.1 - Added Moq to the NuSpec dependencies list.
 1.1.0 - Added support for targeting .NET Framework 4.0 in addition to .NET Framework 4.5.
 1.0.0 - Initial release targeting .NET Framework 4.5.
     </releaseNotes>
@@ -19,6 +20,7 @@
     <tags>Tests Unit Integration Moq</tags>
     <dependencies>
       <dependency id="ChannelAdam.Core" version="1.1.0" />
+      <dependency id="Moq" version="4.2" />
     </dependencies>
   </metadata>
   <files>
