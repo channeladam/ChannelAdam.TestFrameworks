@@ -32,7 +32,7 @@ namespace ChannelAdam.TestFramework.MSTest
     /// </summary>
     public class LogAssert : ChannelAdam.TestFramework.ILogAsserter
     {
-        private ISimpleLogger logger;
+        private readonly ISimpleLogger logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogAssert"/> class.
@@ -136,7 +136,7 @@ namespace ChannelAdam.TestFramework.MSTest
         public void AreEqual<T>(string itemName, T expected, T actual, bool ignoreCase)
         {
             string ignore = ignoreCase ? " (ignoring case)" : string.Empty;
-            this.logger.Log("Asserting {0} is equal to{1}: {2}", itemName, ignore, expected);
+            this.logger.Log("Asserting {0} is equal to {1}: {2}", itemName, ignore, expected);
             MSTest.Assert.AreEqual<T>(expected, actual, itemName, ignoreCase);
         }
 
@@ -170,7 +170,7 @@ namespace ChannelAdam.TestFramework.MSTest
         public void AreNotEqual<T>(string itemName, T expected, T actual, bool ignoreCase)
         {
             string ignore = ignoreCase ? " (ignoring case)" : string.Empty;
-            this.logger.Log("Asserting {0} is NOT equal to{1}: {2}", itemName, ignore, expected);
+            this.logger.Log("Asserting {0} is NOT equal to {1}: {2}", itemName, ignore, expected);
             MSTest.Assert.AreNotEqual<T>(expected, actual, itemName, ignoreCase);
         }
 
@@ -185,7 +185,7 @@ namespace ChannelAdam.TestFramework.MSTest
         /// </remarks>
         public void StringContains(string itemName, string expectedText, string actualText)
         {
-            this.logger.Log("Asserting the text '{0}' contains the text '{1}'", itemName, actualText, expectedText);
+            this.logger.Log("Asserting {0} - that the text '{1}' contains the text '{2}'", itemName, actualText, expectedText);
 
             if (actualText == null)
             {
@@ -242,7 +242,7 @@ namespace ChannelAdam.TestFramework.MSTest
         {
             if (expectedType == null)
             {
-                throw new ArgumentNullException("expectedType");
+                throw new ArgumentNullException(nameof(expectedType));
             }
 
             this.logger.Log("Asserting {0} is an instance of: {1}", itemName, expectedType.Name);
