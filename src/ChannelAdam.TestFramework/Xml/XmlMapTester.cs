@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="XmlMapTesterBase.cs">
+// <copyright file="XmlMapTester.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -17,20 +17,21 @@
 
 namespace ChannelAdam.TestFramework.Xml
 {
-    using ChannelAdam.Core.Reflection;
-    using ChannelAdam.Core.Xml;
-    using ChannelAdam.Logging;
     using System;
     using System.IO;
     using System.Reflection;
     using System.Xml.Linq;
 
+    using ChannelAdam.Core.Reflection;
+    using ChannelAdam.Core.Xml;
+    using ChannelAdam.Logging;
+
     public class XmlMapTester
     {
         #region Fields
 
-        private readonly ISimpleLogger _logger;
-        private readonly XmlTester _xmlTester;
+        private readonly ISimpleLogger logger;
+        private readonly XmlTester xmlTester;
 
         #endregion
 
@@ -42,16 +43,16 @@ namespace ChannelAdam.TestFramework.Xml
 
         protected XmlMapTester(ISimpleLogger logger, ILogAsserter logAsserter)
         {
-            _logger = logger;
-            _xmlTester = new XmlTester(logAsserter);
-            _xmlTester.ActualXmlChangedEvent += _xmlTester_ActualXmlChangedEvent;
-            _xmlTester.ExpectedXmlChangedEvent += _xmlTester_ExpectedXmlChangedEvent;
+            this.logger = logger;
+            this.xmlTester = new XmlTester(logAsserter);
+            this.xmlTester.ActualXmlChangedEvent += this.XmlTester_ActualXmlChangedEvent;
+            this.xmlTester.ExpectedXmlChangedEvent += this.XmlTester_ExpectedXmlChangedEvent;
         }
 
         ~XmlMapTester()
         {
-            _xmlTester.ActualXmlChangedEvent -= _xmlTester_ActualXmlChangedEvent;
-            _xmlTester.ExpectedXmlChangedEvent -= _xmlTester_ExpectedXmlChangedEvent;
+            this.xmlTester.ActualXmlChangedEvent -= this.XmlTester_ActualXmlChangedEvent;
+            this.xmlTester.ExpectedXmlChangedEvent -= this.XmlTester_ExpectedXmlChangedEvent;
         }
 
         #endregion
@@ -64,12 +65,12 @@ namespace ChannelAdam.TestFramework.Xml
         {
             get
             {
-                return _xmlTester.ActualXml;
+                return this.xmlTester.ActualXml;
             }
 
             set
             {
-                _xmlTester.ArrangeActualXml(value);
+                this.xmlTester.ArrangeActualXml(value);
             }
         }
 
@@ -77,7 +78,7 @@ namespace ChannelAdam.TestFramework.Xml
         {
             get
             {
-                return _xmlTester.ExpectedXml;
+                return this.xmlTester.ExpectedXml;
             }
         }
 
@@ -90,40 +91,40 @@ namespace ChannelAdam.TestFramework.Xml
         /// <summary>
         /// Arrange the input XML from an embedded resource in the given assembly.
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="resourceName"></param>
+        /// <param name="assembly">The assembly that contains the resource.</param>
+        /// <param name="resourceName">The name of the resource.</param>
         public void ArrangeInputXml(Assembly assembly, string resourceName)
         {
-            ArrangeInputXml(EmbeddedResource.GetAsString(assembly, resourceName));
+            this.ArrangeInputXml(EmbeddedResource.GetAsString(assembly, resourceName));
         }
 
         /// <summary>
         /// Arrange the input XML from the given XElement.
         /// </summary>
-        /// <param name="xElement"></param>
-        public void ArrangeInputXml(XElement xElement)
+        /// <param name="xmlElement">The XElement to use as input.</param>
+        public void ArrangeInputXml(XElement xmlElement)
         {
-            ArrangeInputXml(xElement.ToString());       // Clone it...
+            this.ArrangeInputXml(xmlElement.ToString());       // Clone it...
         }
 
         /// <summary>
         /// Arrange the input XML by serialising the given object into XML.
         /// </summary>
-        /// <param name="objectToSerialise"></param>
-        public void ArrangeInputXml(object objectToSerialise)
+        /// <param name="valueToSerialise">The object to serialise as input.</param>
+        public void ArrangeInputXml(object valueToSerialise)
         {
-            ArrangeInputXml(objectToSerialise.SerialiseToXml());
+            this.ArrangeInputXml(valueToSerialise.SerialiseToXml());
         }
 
         /// <summary>
         /// Arrange the input XML from the given XML string.
         /// </summary>
-        /// <param name="xmlString"></param>
+        /// <param name="xmlString">The xml to use as input.</param>
         public void ArrangeInputXml(string xmlString)
         {
-            _logger.Log();
-            _logger.Log($"The input XML for the map is: {Environment.NewLine}{xmlString}");
-            InputXml = xmlString.ToXElement();
+            this.logger.Log();
+            this.logger.Log($"The input XML for the map is: {Environment.NewLine}{xmlString}");
+            this.InputXml = xmlString.ToXElement();
         }
 
         #endregion
@@ -133,52 +134,60 @@ namespace ChannelAdam.TestFramework.Xml
         /// <summary>
         /// Arrange the expected output XML from an embedded resource in the given assembly.
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="resourceName"></param>
+        /// <param name="assembly">The assembly that contains the resource.</param>
+        /// <param name="resourceName">The resource name.</param>
         public void ArrangeExpectedOutputXml(Assembly assembly, string resourceName)
         {
-            _xmlTester.ArrangeExpectedXml(assembly, resourceName);
+            this.xmlTester.ArrangeExpectedXml(assembly, resourceName);
         }
 
         /// <summary>
         /// Arrange the expected output XML from the given XElement.
         /// </summary>
-        /// <param name="xElement"></param>
-        public void ArrangeExpectedOutputXml(XElement xElement)
+        /// <param name="xmlElement">The XElement to use as expected output.</param>
+        public void ArrangeExpectedOutputXml(XElement xmlElement)
         {
-            _xmlTester.ArrangeExpectedXml(xElement);
+            this.xmlTester.ArrangeExpectedXml(xmlElement);
         }
 
         /// <summary>
         /// Arrange the expected output XML by serialising the given object into XML.
         /// </summary>
-        /// <param name="objectToSerialise"></param>
-        public void ArrangeExpectedOutputXml(object objectToSerialise)
+        /// <param name="valueToSerialise">The object to serialise as XML to be used as the expected output.</param>
+        public void ArrangeExpectedOutputXml(object valueToSerialise)
         {
-            _xmlTester.ArrangeExpectedXml(objectToSerialise);
+            this.xmlTester.ArrangeExpectedXml(valueToSerialise);
         }
 
         /// <summary>
         /// Arrange the expected output XML from the given XML string.
         /// </summary>
-        /// <param name="xmlString"></param>
+        /// <param name="xmlString">The XML to be used as the expected output.</param>
         public void ArrangeExpectedOutputXml(string xmlString)
         {
-            _xmlTester.ArrangeExpectedXml(xmlString);
+            this.xmlTester.ArrangeExpectedXml(xmlString);
         }
 
         #endregion
 
         #region Set Actual Output XML
 
-        public void SetActualOutputXmlFromXmlFile(string filename)
+        /// <summary>
+        /// Sets the actual output XML from XML file.
+        /// </summary>
+        /// <param name="fileName">The filename.</param>
+        public void SetActualOutputXmlFromXmlFile(string fileName)
         {
-            SetActualOutputXmlFromXmlString(File.ReadAllText(filename));
+            this.SetActualOutputXmlFromXmlString(File.ReadAllText(fileName));
         }
 
+        /// <summary>
+        /// Sets the actual output XML from XML string.
+        /// </summary>
+        /// <param name="xmlString">The XML string.</param>
         public void SetActualOutputXmlFromXmlString(string xmlString)
         {
-            _xmlTester.ArrangeActualXml(xmlString);
+            this.xmlTester.ArrangeActualXml(xmlString);
         }
 
         #endregion
@@ -190,7 +199,7 @@ namespace ChannelAdam.TestFramework.Xml
         /// </summary>
         public void AssertActualOutputXmlEqualsExpectedOutputXml()
         {
-            _xmlTester.AssertActualXmlEqualsExpectedXml();
+            this.xmlTester.AssertActualXmlEqualsExpectedXml();
         }
 
         #endregion
@@ -199,16 +208,16 @@ namespace ChannelAdam.TestFramework.Xml
 
         #region Private Methods
 
-        private void _xmlTester_ExpectedXmlChangedEvent(object sender, XmlChangedEventArgs e)
+        private void XmlTester_ExpectedXmlChangedEvent(object sender, XmlChangedEventArgs e)
         {
-            _logger.Log();
-            _logger.Log($"The expected output XML of the map is: {Environment.NewLine}{e.Xml}");
+            this.logger.Log();
+            this.logger.Log($"The expected output XML of the map is: {Environment.NewLine}{e.Xml}");
         }
 
-        private void _xmlTester_ActualXmlChangedEvent(object sender, XmlChangedEventArgs e)
+        private void XmlTester_ActualXmlChangedEvent(object sender, XmlChangedEventArgs e)
         {
-            _logger.Log();
-            _logger.Log($"The actual output XML from the map is: {Environment.NewLine}{e.Xml}");
+            this.logger.Log();
+            this.logger.Log($"The actual output XML from the map is: {Environment.NewLine}{e.Xml}");
         }
 
         #endregion

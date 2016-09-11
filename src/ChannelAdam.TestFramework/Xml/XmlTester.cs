@@ -17,6 +17,11 @@
 
 namespace ChannelAdam.TestFramework.Xml
 {
+    using System;
+    using System.Reflection;
+    using System.Xml;
+    using System.Xml.Linq;
+
     using Core.Reflection;
     using Core.Xml;
     using Logging;
@@ -24,21 +29,19 @@ namespace ChannelAdam.TestFramework.Xml
     using Org.XmlUnit.Builder;
     using Org.XmlUnit.Diff;
 
-    using System;
-    using System.Reflection;
-    using System.Xml;
-    using System.Xml.Linq;
-
+    /// <summary>
+    /// A helper class for testing differences between two XML sources.
+    /// </summary>
     public class XmlTester
     {
         #region Fields
 
-        private readonly ISimpleLogger _logger;
-        private readonly ILogAsserter _logAsserter;
-        private readonly IComparisonFormatter _comparisonFormatter;
+        private readonly ISimpleLogger logger;
+        private readonly ILogAsserter logAsserter;
+        private readonly IComparisonFormatter comparisonFormatter;
 
-        private XElement _actualXml;
-        private XElement _expectedXml;
+        private XElement actualXml;
+        private XElement expectedXml;
 
         #endregion
 
@@ -58,16 +61,23 @@ namespace ChannelAdam.TestFramework.Xml
 
         public XmlTester(ISimpleLogger logger, ILogAsserter logAsserter, IComparisonFormatter comparisonFormatter)
         {
-            _logger = logger;
-            _logAsserter = logAsserter;
-            _comparisonFormatter = comparisonFormatter;
+            this.logger = logger;
+            this.logAsserter = logAsserter;
+            this.comparisonFormatter = comparisonFormatter;
         }
 
         #endregion
 
         #region Events
 
+        /// <summary>
+        /// Occurs when the actual XML property is changed.
+        /// </summary>
         public event EventHandler<XmlChangedEventArgs> ActualXmlChangedEvent;
+
+        /// <summary>
+        /// Occurs when expected XML property is changed.
+        /// </summary>
         public event EventHandler<XmlChangedEventArgs> ExpectedXmlChangedEvent;
 
         #endregion
@@ -76,21 +86,29 @@ namespace ChannelAdam.TestFramework.Xml
 
         public XElement ActualXml
         {
-            get { return _actualXml; }
+            get
+            {
+                return this.actualXml;
+            }
+
             private set
             {
-                _actualXml = value;
-                OnActualXmlChanged(value);
+                this.actualXml = value;
+                this.OnActualXmlChanged(value);
             }
         }
 
         public XElement ExpectedXml
         {
-            get { return _expectedXml; }
+            get
+            {
+                return this.expectedXml;
+            }
+
             private set
             {
-                _expectedXml = value;
-                OnExpectedXmlChanged(value);
+                this.expectedXml = value;
+                this.OnExpectedXmlChanged(value);
             }
         }
 
@@ -103,38 +121,38 @@ namespace ChannelAdam.TestFramework.Xml
         /// <summary>
         /// Arrange the actual XML from an embedded resource in the given assembly.
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="resourceName"></param>
+        /// <param name="assembly">The assembly that contains the resource.</param>
+        /// <param name="resourceName">The name of the resource.</param>
         public void ArrangeActualXml(Assembly assembly, string resourceName)
         {
-            ArrangeActualXml(EmbeddedResource.GetAsString(assembly, resourceName));
+            this.ArrangeActualXml(EmbeddedResource.GetAsString(assembly, resourceName));
         }
 
         /// <summary>
         /// Arrange the actual XML from the given XElement.
         /// </summary>
-        /// <param name="xElement"></param>
-        public void ArrangeActualXml(XElement xElement)
+        /// <param name="xmlElement">The XElement to set as the input.</param>
+        public void ArrangeActualXml(XElement xmlElement)
         {
-            ArrangeActualXml(xElement.ToString());      // Clone it...
+            this.ArrangeActualXml(xmlElement.ToString());      // Clone it...
         }
 
         /// <summary>
         /// Arrange the actual XML by serialising the given object into XML.
         /// </summary>
-        /// <param name="objectToSerialise"></param>
-        public void ArrangeActualXml(object objectToSerialise)
+        /// <param name="valueToSerialise">The object to serialise as the actual XML.</param>
+        public void ArrangeActualXml(object valueToSerialise)
         {
-            ArrangeActualXml(objectToSerialise.SerialiseToXml());
+            this.ArrangeActualXml(valueToSerialise.SerialiseToXml());
         }
 
         /// <summary>
         /// Arrange the actual XML from the given XML string.
         /// </summary>
-        /// <param name="xmlString"></param>
+        /// <param name="xmlString">The XML string.</param>
         public void ArrangeActualXml(string xmlString)
         {
-            ActualXml = xmlString.ToXElement();
+            this.ActualXml = xmlString.ToXElement();
         }
 
         #endregion
@@ -144,52 +162,38 @@ namespace ChannelAdam.TestFramework.Xml
         /// <summary>
         /// Arrange the expected XML from an embedded resource in the given assembly.
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="resourceName"></param>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="resourceName">Name of the resource.</param>
         public void ArrangeExpectedXml(Assembly assembly, string resourceName)
         {
-            ArrangeExpectedXml(EmbeddedResource.GetAsString(assembly, resourceName));
+            this.ArrangeExpectedXml(EmbeddedResource.GetAsString(assembly, resourceName));
         }
 
         /// <summary>
         /// Arrange the expected XML from the given XElement.
         /// </summary>
-        /// <param name="xElement"></param>
-        public void ArrangeExpectedXml(XElement xElement)
+        /// <param name="xmlElement">The XML element.</param>
+        public void ArrangeExpectedXml(XElement xmlElement)
         {
-            ArrangeExpectedXml(xElement.ToString());     // Clone it...
+            this.ArrangeExpectedXml(xmlElement.ToString());     // Clone it...
         }
 
         /// <summary>
         /// Arrange the expected XML by serialising the given object into XML.
         /// </summary>
-        /// <param name="objectToSerialise"></param>
-        public void ArrangeExpectedXml(object objectToSerialise)
+        /// <param name="valueToSerialise">The value to serialise as the expected XML.</param>
+        public void ArrangeExpectedXml(object valueToSerialise)
         {
-            ArrangeExpectedXml(objectToSerialise.SerialiseToXml());
+            this.ArrangeExpectedXml(valueToSerialise.SerialiseToXml());
         }
 
         /// <summary>
         /// Arrange the expected XML from the given XML string.
         /// </summary>
-        /// <param name="xmlString"></param>
+        /// <param name="xmlString">The XML string.</param>
         public void ArrangeExpectedXml(string xmlString)
         {
-            ExpectedXml = xmlString.ToXElement();
-        }
-
-        #endregion
-
-        #region Change Methods
-
-        protected virtual void OnExpectedXmlChanged(XElement value)
-        {
-            ExpectedXmlChangedEvent?.Invoke(this, new XmlChangedEventArgs(value));
-        }
-
-        protected virtual void OnActualXmlChanged(XElement value)
-        {
-            ActualXmlChangedEvent?.Invoke(this, new XmlChangedEventArgs(value));
+            this.ExpectedXml = xmlString.ToXElement();
         }
 
         #endregion
@@ -203,17 +207,17 @@ namespace ChannelAdam.TestFramework.Xml
         {
             Diff differences;
 
-            _logger.Log("Asserting actual and expected XML are equal");
+            this.logger.Log("Asserting actual and expected XML are equal");
 
-            bool identical = IsIdentical(out differences);
+            bool identical = this.IsIdentical(out differences);
             if (!identical)
             {
                 string report = differences.ToString();
-                _logger.Log("The differences are: " + Environment.NewLine + report);
+                this.logger.Log("The differences are: " + Environment.NewLine + report);
             }
 
-            _logAsserter.IsTrue("The XML is as expected", identical);
-            _logger.Log("The XML is as expected");
+            this.logAsserter.IsTrue("The XML is as expected", identical);
+            this.logger.Log("The XML is as expected");
         }
 
         #endregion
@@ -222,27 +226,29 @@ namespace ChannelAdam.TestFramework.Xml
 
         public bool IsIdentical(out Diff differences)
         {
-            return IsIdentical(ActualXml, ExpectedXml, out differences);
+            return this.IsIdentical(this.ActualXml, this.ExpectedXml, out differences);
         }
 
         public bool IsIdentical(XElement actual, XElement expected, out Diff differences)
         {
-            return IsIdentical(actual.ToXmlNode(), expected.ToXmlNode(), out differences);
+            return this.IsIdentical(actual.ToXmlNode(), expected.ToXmlNode(), out differences);
         }
 
         /// <summary>
         /// Determines if the given actual and expected xml is identical.
         /// </summary>
-        /// <param name="actual"></param>
-        /// <param name="expected"></param>
-        /// <param name="differences"></param>
-        /// <returns>The xml differences.</returns>
+        /// <param name="actual">The actual.</param>
+        /// <param name="expected">The expected.</param>
+        /// <param name="differences">The differences.</param>
+        /// <returns>
+        /// The xml differences.
+        /// </returns>
         public bool IsIdentical(XmlNode actual, XmlNode expected, out Diff differences)
         {
             differences = DiffBuilder.Compare(Input.FromNode(expected))   // https://github.com/xmlunit/user-guide/wiki/DiffBuilder
                                     .IgnoreComments()
                                     .CheckForSimilar()      // ignore child order, namespace prefixes etc - https://github.com/xmlunit/user-guide/wiki/DifferenceEvaluator#default-differenceevaluator
-                                    .WithComparisonFormatter(_comparisonFormatter)
+                                    .WithComparisonFormatter(this.comparisonFormatter)
                                     .WithTest(Input.FromNode(actual))
                                     .Build();
 
@@ -250,6 +256,20 @@ namespace ChannelAdam.TestFramework.Xml
         }
 
         #endregion
+
+        #endregion
+
+        #region Protected Change Methods
+
+        protected virtual void OnExpectedXmlChanged(XElement value)
+        {
+            this.ExpectedXmlChangedEvent?.Invoke(this, new XmlChangedEventArgs(value));
+        }
+
+        protected virtual void OnActualXmlChanged(XElement value)
+        {
+            this.ActualXmlChangedEvent?.Invoke(this, new XmlChangedEventArgs(value));
+        }
 
         #endregion
     }
