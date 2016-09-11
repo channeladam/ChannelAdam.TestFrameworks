@@ -28,8 +28,7 @@ namespace ChannelAdam.TestFramework
     /// </summary>
     public abstract class TestEasy
     {
-        private static ISimpleLogger logger = new SimpleConsoleLogger();
-
+        private ISimpleLogger logger;
         private ILogAsserter logAssert;
         private Exception actualException;
         private ExpectedExceptionDescriptor expectedException;
@@ -38,10 +37,14 @@ namespace ChannelAdam.TestFramework
         /// Initializes a new instance of the <see cref="TestEasy" /> class.
         /// </summary>
         /// <param name="logAssert">The log asserter.</param>
-        protected TestEasy(ILogAsserter logAssert)
+        protected TestEasy(ILogAsserter logAssert) : this(new SimpleConsoleLogger(), logAssert)
         {
-            this.logAssert = logAssert;
+        }
 
+        protected TestEasy(ISimpleLogger logger, ILogAsserter logAssert)
+        {
+            this.logger = logger;
+            this.logAssert = logAssert;
             this.expectedException = new ExpectedExceptionDescriptor(logger);
         }
 
@@ -71,7 +74,7 @@ namespace ChannelAdam.TestFramework
         {
             get
             {
-                return TestEasy.logger;
+                return this.logger;
             }
         }
 

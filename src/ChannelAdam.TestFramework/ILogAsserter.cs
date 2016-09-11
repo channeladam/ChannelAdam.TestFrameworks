@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="ILogAsserter.cs">
-//     Copyright (c) 2014 Adam Craven. All rights reserved.
+//     Copyright (c) 2014-2016 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,14 +25,14 @@ namespace ChannelAdam.TestFramework
     public interface ILogAsserter
     {
         /// <summary>
-        /// Asserts that the value is <see cref="True" />.
+        /// Asserts that the value is <see cref="true" />.
         /// </summary>
         /// <param name="itemName">Name of the item.</param>
         /// <param name="actual">The actual value to test.</param>
         void IsTrue(string itemName, bool actual);
 
         /// <summary>
-        /// Asserts that the value is <see cref="False" />.
+        /// Asserts that the value is <see cref="false" />.
         /// </summary>
         /// <param name="itemName">Name of the item.</param>
         /// <param name="actual">The actual value to test.</param>
@@ -62,7 +62,7 @@ namespace ChannelAdam.TestFramework
         /// Outputs the name of the object being asserted for better traceability in the test output.
         /// </remarks>
         void IsNotNull<T>(string itemName, T actual);
-        
+
         /// <summary>
         /// Asserts the given values are equal.
         /// </summary>

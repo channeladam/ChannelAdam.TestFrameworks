@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="MoqTestFixture.cs">
-//     Copyright (c) 2014 Adam Craven. All rights reserved.
+//     Copyright (c) 2014-2016 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,6 @@
 
 namespace ChannelAdam.TestFramework
 {
-    using System;
-
     using ChannelAdam.Logging;
 
     using Moq;
@@ -35,7 +33,17 @@ namespace ChannelAdam.TestFramework
         /// </summary>
         /// <param name="logAssert">The log asserter.</param>
         protected MoqTestFixture(ILogAsserter logAssert)
-            : this(MockBehavior.Loose, logAssert)
+            : this(MockBehavior.Loose, new SimpleConsoleLogger(), logAssert)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MoqTestFixture" /> class.
+        /// </summary>
+        /// <param name="logger">The simple logger to use.</param>
+        /// <param name="logAssert">The log asserter.</param>
+        protected MoqTestFixture(ISimpleLogger logger, ILogAsserter logAssert)
+            : this(MockBehavior.Loose, logger, logAssert)
         {
         }
 
@@ -43,9 +51,10 @@ namespace ChannelAdam.TestFramework
         /// Initializes a new instance of the <see cref="MoqTestFixture" /> class.
         /// </summary>
         /// <param name="mockBehaviour">The type of mock behavior.</param>
+        /// <param name="logger">The simple logger to use.</param>
         /// <param name="logAssert">The log asserter.</param>
-        protected MoqTestFixture(MockBehavior mockBehaviour, ILogAsserter logAssert)
-            : base(logAssert)
+        protected MoqTestFixture(MockBehavior mockBehaviour, ISimpleLogger logger, ILogAsserter logAssert)
+            : base(logger, logAssert)
         {
             this.mockRepository = new MockRepository(mockBehaviour);
         }
