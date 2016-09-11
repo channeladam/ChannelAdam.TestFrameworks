@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ChannelAdam.TestFramework</id>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <title>ChannelAdam Test Framework Library</title>
     <authors>Adam Craven</authors>
     <owners>Adam Craven</owners>
@@ -10,16 +10,17 @@
     <projectUrl>https://channeladamtestframeworks.codeplex.com</projectUrl>
     <iconUrl>https://devzone.channeladam.com/img/channeladam/channeladam-logo.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>https://DevZone.ChannelAdam.com presents a foundational automated testing library designed to make it easier to implement test cases and to read their output.</description>
+    <description>A foundational automated testing library designed to make it easier to implement test cases and to read their output. Includes helpers for testing XML differences.</description>
     <releaseNotes>
+1.2.0 - Added XMLTester and XMLMapTester.
 1.1.1 - Added Moq to the NuSpec dependencies list.
 1.1.0 - Added support for targeting .NET Framework 4.0 in addition to .NET Framework 4.5.
 1.0.0 - Initial release targeting .NET Framework 4.5.
     </releaseNotes>
-    <copyright>Copyright 2014-2015 Adam Craven</copyright>
+    <copyright>Copyright 2014-2016 Adam Craven</copyright>
     <tags>Tests Unit Integration Moq</tags>
     <dependencies>
-      <dependency id="ChannelAdam.Core" version="1.1.0" />
+      <dependency id="ChannelAdam.Core" version="1.3.1" />
       <dependency id="Moq" version="4.2" />
     </dependencies>
   </metadata>
@@ -27,5 +28,5 @@
     <file src="bin\Release\**\ChannelAdam.TestFramework.dll" target="lib" />
     <file src="bin\Release\**\ChannelAdam.TestFramework.pdb" target="lib" />
     <file src="**\*.cs" exclude="obj\**\*;bin\**\*" target="src" />
-  </files>  
+  </files>
 </package>
