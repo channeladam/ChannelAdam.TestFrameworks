@@ -70,6 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestEasy.cs" />
     <Compile Include="Xml\XmlChangedEventArgs.cs" />
+    <Compile Include="Xml\XmlMapTester.cs" />
     <Compile Include="Xml\XmlTester.cs" />
   </ItemGroup>
   <ItemGroup>
