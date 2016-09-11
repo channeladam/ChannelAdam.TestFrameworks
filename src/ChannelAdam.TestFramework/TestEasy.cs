@@ -71,7 +71,7 @@ namespace ChannelAdam.TestFramework
         {
             get
             {
-                return MoqTestFixture.logger;
+                return TestEasy.logger;
             }
         }
 
@@ -83,7 +83,7 @@ namespace ChannelAdam.TestFramework
         /// </value>
         protected ExpectedExceptionDescriptor ExpectedException
         {
-            get 
+            get
             {
                 return this.expectedException;
             }
@@ -98,9 +98,9 @@ namespace ChannelAdam.TestFramework
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "ChannelAdam.Logging.ISimpleLogger.Log(System.String)", Justification = "Not globalizing.")]
         protected Exception ActualException
         {
-            get 
+            get
             {
-                return this.actualException; 
+                return this.actualException;
             }
 
             set
@@ -180,7 +180,7 @@ namespace ChannelAdam.TestFramework
         /// </summary>
         /// <param name="expectedExceptionType">Expected type of the exception.</param>
         /// <remarks>
-        /// Asserts that the expected exception as described by the property ExpectedException. 
+        /// Asserts that the expected exception as described by the property ExpectedException.
         /// </remarks>
         protected void AssertExpectedException(Type expectedExceptionType)
         {
@@ -192,7 +192,7 @@ namespace ChannelAdam.TestFramework
         /// Asserts that the expected exception occurred.
         /// </summary>
         /// <remarks>
-        /// Asserts that the expected exception as described by the property ExpectedException. 
+        /// Asserts that the expected exception as described by the property ExpectedException.
         /// </remarks>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ActualException", Justification = "As desired.")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "ChannelAdam.TestFramework.ILogAsserter.Fail(System.String,System.Object[])", Justification = "Not globalizing.")]
