@@ -18,3 +18,7 @@
 /src/ChannelAdam.TestFramework.MSTest/StyleCop.Cache
 /src/ChannelAdam.TestFramework.MSTest/bin/Release
 /src/ChannelAdam.TestFramework.MSTest/obj/Release
+/src/ChannelAdam.TestFramework.BizTalk/bin/Debug
+/src/ChannelAdam.TestFramework.BizTalk/Lib/BizTalk2010
+/src/ChannelAdam.TestFramework.BizTalk/obj/Debug
+/src/ChannelAdam.TestFramework.BizTalk/packages

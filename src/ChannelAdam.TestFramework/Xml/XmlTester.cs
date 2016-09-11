@@ -37,7 +37,7 @@ namespace ChannelAdam.TestFramework.Xml
         #region Fields
 
         private readonly ISimpleLogger logger;
-        private readonly ILogAsserter logAsserter;
+        private readonly ILogAsserter logAssert;
         private readonly IComparisonFormatter comparisonFormatter;
 
         private XElement actualXml;
@@ -62,7 +62,7 @@ namespace ChannelAdam.TestFramework.Xml
         public XmlTester(ISimpleLogger logger, ILogAsserter logAsserter, IComparisonFormatter comparisonFormatter)
         {
             this.logger = logger;
-            this.logAsserter = logAsserter;
+            this.logAssert = logAsserter;
             this.comparisonFormatter = comparisonFormatter;
         }
 
@@ -216,7 +216,7 @@ namespace ChannelAdam.TestFramework.Xml
                 this.logger.Log("The differences are: " + Environment.NewLine + report);
             }
 
-            this.logAsserter.IsTrue("The XML is as expected", identical);
+            this.logAssert.IsTrue("The XML is as expected", identical);
             this.logger.Log("The XML is as expected");
         }
 
