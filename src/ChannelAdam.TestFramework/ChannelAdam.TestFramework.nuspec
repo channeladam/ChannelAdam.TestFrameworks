@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ChannelAdam.TestFramework</id>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <title>ChannelAdam Test Framework Library</title>
     <authors>Adam Craven</authors>
     <owners>Adam Craven</owners>
@@ -12,7 +12,8 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>A foundational automated testing library designed to make it easier to implement test cases and to read their output. Includes helpers for testing XML differences.</description>
     <releaseNotes>
-1.2.0 - Added XMLTester and XMLMapTester.
+1.2.1 - Added override methods for serialising using XmlRootAttribute and XmlAttributeOverrides.
+1.2.0 - Added XmlTester and XmlMapTester.
 1.1.1 - Added Moq to the NuSpec dependencies list.
 1.1.0 - Added support for targeting .NET Framework 4.0 in addition to .NET Framework 4.5.
 1.0.0 - Initial release targeting .NET Framework 4.5.
@@ -20,8 +21,9 @@
     <copyright>Copyright 2014-2016 Adam Craven</copyright>
     <tags>Tests Unit Integration Moq</tags>
     <dependencies>
-      <dependency id="ChannelAdam.Core" version="1.3.1" />
+      <dependency id="ChannelAdam.Core" version="1.3.3" />
       <dependency id="Moq" version="4.2" />
+      <dependency id="XMLUnit.Core" version="2.2.0" />
     </dependencies>
   </metadata>
   <files>

@@ -21,6 +21,7 @@ namespace ChannelAdam.TestFramework.Xml
     using System.IO;
     using System.Reflection;
     using System.Xml.Linq;
+    using System.Xml.Serialization;
 
     using ChannelAdam.Core.Reflection;
     using ChannelAdam.Core.Xml;
@@ -104,6 +105,11 @@ namespace ChannelAdam.TestFramework.Xml
         /// <param name="xmlElement">The XElement to use as input.</param>
         public void ArrangeInputXml(XElement xmlElement)
         {
+            if (xmlElement == null)
+            {
+                throw new ArgumentNullException(nameof(xmlElement));
+            }
+
             this.ArrangeInputXml(xmlElement.ToString());       // Clone it...
         }
 
@@ -117,14 +123,34 @@ namespace ChannelAdam.TestFramework.Xml
         }
 
         /// <summary>
+        /// Arrange the input XML by serialising the given object into XML.
+        /// </summary>
+        /// <param name="valueToSerialise">The object to serialise as input.</param>
+        /// <param name="xmlRootAttribute">The XML root attribute.</param>
+        public void ArrangeInputXml(object valueToSerialise, XmlRootAttribute xmlRootAttribute)
+        {
+            this.ArrangeInputXml(valueToSerialise.SerialiseToXml(xmlRootAttribute));
+        }
+
+        /// <summary>
+        /// Arrange the input XML by serialising the given object into XML.
+        /// </summary>
+        /// <param name="valueToSerialise">The object to serialise as input.</param>
+        /// <param name="xmlAttributeOverrides">The XML attribute overrides.</param>
+        public void ArrangeInputXml(object valueToSerialise, XmlAttributeOverrides xmlAttributeOverrides)
+        {
+            this.ArrangeInputXml(valueToSerialise.SerialiseToXml(xmlAttributeOverrides));
+        }
+
+        /// <summary>
         /// Arrange the input XML from the given XML string.
         /// </summary>
-        /// <param name="xmlString">The xml to use as input.</param>
-        public void ArrangeInputXml(string xmlString)
+        /// <param name="xmlValue">The XML to use as input.</param>
+        public void ArrangeInputXml(string xmlValue)
         {
             this.logger.Log();
-            this.logger.Log($"The input XML for the map is: {Environment.NewLine}{xmlString}");
-            this.InputXml = xmlString.ToXElement();
+            this.logger.Log($"The input XML for the map is: {Environment.NewLine}{xmlValue}");
+            this.InputXml = xmlValue.ToXElement();
         }
 
         #endregion
@@ -160,12 +186,32 @@ namespace ChannelAdam.TestFramework.Xml
         }
 
         /// <summary>
+        /// Arrange the expected output XML by serialising the given object into XML.
+        /// </summary>
+        /// <param name="valueToSerialise">The object to serialise as XML to be used as the expected output.</param>
+        /// <param name="xmlRootAttribute">The XML root attribute.</param>
+        public void ArrangeExpectedOutputXml(object valueToSerialise, XmlRootAttribute xmlRootAttribute)
+        {
+            this.xmlTester.ArrangeExpectedXml(valueToSerialise, xmlRootAttribute);
+        }
+
+        /// <summary>
+        /// Arrange the expected output XML by serialising the given object into XML.
+        /// </summary>
+        /// <param name="valueToSerialise">The object to serialise as XML to be used as the expected output.</param>
+        /// <param name="xmlAttributeOverrides">The XML attribute overrides.</param>
+        public void ArrangeExpectedOutputXml(object valueToSerialise, XmlAttributeOverrides xmlAttributeOverrides)
+        {
+            this.xmlTester.ArrangeExpectedXml(valueToSerialise, xmlAttributeOverrides);
+        }
+
+        /// <summary>
         /// Arrange the expected output XML from the given XML string.
         /// </summary>
-        /// <param name="xmlString">The XML to be used as the expected output.</param>
-        public void ArrangeExpectedOutputXml(string xmlString)
+        /// <param name="xmlValue">The XML to be used as the expected output.</param>
+        public void ArrangeExpectedOutputXml(string xmlValue)
         {
-            this.xmlTester.ArrangeExpectedXml(xmlString);
+            this.xmlTester.ArrangeExpectedXml(xmlValue);
         }
 
         #endregion
@@ -184,10 +230,10 @@ namespace ChannelAdam.TestFramework.Xml
         /// <summary>
         /// Sets the actual output XML from XML string.
         /// </summary>
-        /// <param name="xmlString">The XML string.</param>
-        public void SetActualOutputXmlFromXmlString(string xmlString)
+        /// <param name="xmlValue">The XML string.</param>
+        public void SetActualOutputXmlFromXmlString(string xmlValue)
         {
-            this.xmlTester.ArrangeActualXml(xmlString);
+            this.xmlTester.ArrangeActualXml(xmlValue);
         }
 
         #endregion

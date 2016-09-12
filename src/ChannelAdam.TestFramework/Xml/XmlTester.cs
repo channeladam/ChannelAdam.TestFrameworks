@@ -21,11 +21,11 @@ namespace ChannelAdam.TestFramework.Xml
     using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
+    using System.Xml.Serialization;
 
     using Core.Reflection;
     using Core.Xml;
     using Logging;
-
     using Org.XmlUnit.Builder;
     using Org.XmlUnit.Diff;
 
@@ -134,6 +134,11 @@ namespace ChannelAdam.TestFramework.Xml
         /// <param name="xmlElement">The XElement to set as the input.</param>
         public void ArrangeActualXml(XElement xmlElement)
         {
+            if (xmlElement == null)
+            {
+                throw new ArgumentNullException(nameof(xmlElement));
+            }
+
             this.ArrangeActualXml(xmlElement.ToString());      // Clone it...
         }
 
@@ -147,12 +152,32 @@ namespace ChannelAdam.TestFramework.Xml
         }
 
         /// <summary>
+        /// Arrange the actual XML by serialising the given object into XML.
+        /// </summary>
+        /// <param name="valueToSerialise">The object to serialise as the actual XML.</param>
+        /// <param name="xmlRootAttribute">The XML root attribute.</param>
+        public void ArrangeActualXml(object valueToSerialise, XmlRootAttribute xmlRootAttribute)
+        {
+            this.ArrangeActualXml(valueToSerialise.SerialiseToXml(xmlRootAttribute));
+        }
+
+        /// <summary>
+        /// Arrange the actual XML by serialising the given object into XML.
+        /// </summary>
+        /// <param name="valueToSerialise">The object to serialise as the actual XML.</param>
+        /// <param name="xmlAttributeOverrides">The XML attribute overrides.</param>
+        public void ArrangeActualXml(object valueToSerialise, XmlAttributeOverrides xmlAttributeOverrides)
+        {
+            this.ArrangeActualXml(valueToSerialise.SerialiseToXml(xmlAttributeOverrides));
+        }
+
+        /// <summary>
         /// Arrange the actual XML from the given XML string.
         /// </summary>
-        /// <param name="xmlString">The XML string.</param>
-        public void ArrangeActualXml(string xmlString)
+        /// <param name="xmlValue">The XML string.</param>
+        public void ArrangeActualXml(string xmlValue)
         {
-            this.ActualXml = xmlString.ToXElement();
+            this.ActualXml = xmlValue.ToXElement();
         }
 
         #endregion
@@ -175,6 +200,11 @@ namespace ChannelAdam.TestFramework.Xml
         /// <param name="xmlElement">The XML element.</param>
         public void ArrangeExpectedXml(XElement xmlElement)
         {
+            if (xmlElement == null)
+            {
+                throw new ArgumentNullException(nameof(xmlElement));
+            }
+
             this.ArrangeExpectedXml(xmlElement.ToString());     // Clone it...
         }
 
@@ -188,12 +218,32 @@ namespace ChannelAdam.TestFramework.Xml
         }
 
         /// <summary>
+        /// Arrange the expected XML by serialising the given object into XML.
+        /// </summary>
+        /// <param name="valueToSerialise">The value to serialise as the expected XML.</param>
+        /// <param name="xmlRootAttribute">The XML root attribute.</param>
+        public void ArrangeExpectedXml(object valueToSerialise, XmlRootAttribute xmlRootAttribute)
+        {
+            this.ArrangeExpectedXml(valueToSerialise.SerialiseToXml(xmlRootAttribute));
+        }
+
+        /// <summary>
+        /// Arrange the expected XML by serialising the given object into XML.
+        /// </summary>
+        /// <param name="valueToSerialise">The value to serialise as the expected XML.</param>
+        /// <param name="xmlAttributeOverrides">The XML attribute overrides.</param>
+        public void ArrangeExpectedXml(object valueToSerialise, XmlAttributeOverrides xmlAttributeOverrides)
+        {
+            this.ArrangeExpectedXml(valueToSerialise.SerialiseToXml(xmlAttributeOverrides));
+        }
+
+        /// <summary>
         /// Arrange the expected XML from the given XML string.
         /// </summary>
-        /// <param name="xmlString">The XML string.</param>
-        public void ArrangeExpectedXml(string xmlString)
+        /// <param name="xmlValue">The XML string.</param>
+        public void ArrangeExpectedXml(string xmlValue)
         {
-            this.ExpectedXml = xmlString.ToXElement();
+            this.ExpectedXml = xmlValue.ToXElement();
         }
 
         #endregion
@@ -203,20 +253,21 @@ namespace ChannelAdam.TestFramework.Xml
         /// <summary>
         /// Assert the actual XML against the expected XML.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "*", Justification = "Ignored.")]
         public void AssertActualXmlEqualsExpectedXml()
         {
             Diff differences;
 
             this.logger.Log("Asserting actual and expected XML are equal");
 
-            bool identical = this.IsIdentical(out differences);
-            if (!identical)
+            var isIdentical = this.IsIdentical(out differences);
+            if (!isIdentical)
             {
-                string report = differences.ToString();
+                var report = differences.ToString();
                 this.logger.Log("The differences are: " + Environment.NewLine + report);
             }
 
-            this.logAssert.IsTrue("The XML is as expected", identical);
+            this.logAssert.IsTrue("The XML is as expected", isIdentical);
             this.logger.Log("The XML is as expected");
         }
 
@@ -224,25 +275,29 @@ namespace ChannelAdam.TestFramework.Xml
 
         #region Utility Methods
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "0#", Justification = "As designed.")]
         public bool IsIdentical(out Diff differences)
         {
             return this.IsIdentical(this.ActualXml, this.ExpectedXml, out differences);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#", Justification = "As designed.")]
         public bool IsIdentical(XElement actual, XElement expected, out Diff differences)
         {
             return this.IsIdentical(actual.ToXmlNode(), expected.ToXmlNode(), out differences);
         }
 
         /// <summary>
-        /// Determines if the given actual and expected xml is identical.
+        /// Determines if the given actual and expected XML is identical.
         /// </summary>
         /// <param name="actual">The actual.</param>
         /// <param name="expected">The expected.</param>
         /// <param name="differences">The differences.</param>
         /// <returns>
-        /// The xml differences.
+        /// The XML differences.
         /// </returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1059:MembersShouldNotExposeCertainConcreteTypes", MessageId = "System.Xml.XmlNode", Justification = "As designed.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#", Justification = "As designed.")]
         public bool IsIdentical(XmlNode actual, XmlNode expected, out Diff differences)
         {
             differences = DiffBuilder.Compare(Input.FromNode(expected))   // https://github.com/xmlunit/user-guide/wiki/DiffBuilder
