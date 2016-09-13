@@ -23,6 +23,7 @@ namespace ChannelAdam.TestFramework.Xml
     using System.Xml.Linq;
     using System.Xml.Serialization;
 
+    using Abstractions;
     using Core.Reflection;
     using Core.Xml;
     using Logging;
@@ -256,11 +257,32 @@ namespace ChannelAdam.TestFramework.Xml
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "*", Justification = "Ignored.")]
         public void AssertActualXmlEqualsExpectedXml()
         {
+            this.AssertActualXmlEqualsExpectedXml(null);
+        }
+
+        /// <summary>
+        /// Assert the actual XML against the expected XML, ignoring the elements specified by the given XML filter.
+        /// </summary>
+        /// <param name="xmlFilter">The XML filter to be applied to ignore specified elements from the assertion.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "*", Justification = "Ignored.")]
+        public void AssertActualXmlEqualsExpectedXml(IXmlFilter xmlFilter)
+        {
             Diff differences;
 
             this.logger.Log("Asserting actual and expected XML are equal");
 
-            var isIdentical = this.IsIdentical(out differences);
+            XElement filteredExpectedXml = this.ExpectedXml;
+            XElement filteredActualXml = this.ActualXml;
+
+            if (xmlFilter != null && xmlFilter.HasFilters())
+            {
+                this.logger.Log(xmlFilter.ToString());
+
+                filteredExpectedXml = xmlFilter.ApplyFilterTo(filteredExpectedXml);
+                filteredActualXml = xmlFilter.ApplyFilterTo(filteredActualXml);
+            }
+
+            var isIdentical = this.IsIdentical(filteredExpectedXml, filteredActualXml, out differences);
             if (!isIdentical)
             {
                 var report = differences.ToString();
@@ -278,27 +300,27 @@ namespace ChannelAdam.TestFramework.Xml
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "0#", Justification = "As designed.")]
         public bool IsIdentical(out Diff differences)
         {
-            return this.IsIdentical(this.ActualXml, this.ExpectedXml, out differences);
+            return this.IsIdentical(this.ExpectedXml, this.ActualXml, out differences);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#", Justification = "As designed.")]
-        public bool IsIdentical(XElement actual, XElement expected, out Diff differences)
+        public bool IsIdentical(XNode expected, XNode actual, out Diff differences)
         {
-            return this.IsIdentical(actual.ToXmlNode(), expected.ToXmlNode(), out differences);
+            return this.IsIdentical(expected.ToXmlNode(), actual.ToXmlNode(), out differences);
         }
 
         /// <summary>
         /// Determines if the given actual and expected XML is identical.
         /// </summary>
-        /// <param name="actual">The actual.</param>
         /// <param name="expected">The expected.</param>
+        /// <param name="actual">The actual.</param>
         /// <param name="differences">The differences.</param>
         /// <returns>
         /// The XML differences.
         /// </returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1059:MembersShouldNotExposeCertainConcreteTypes", MessageId = "System.Xml.XmlNode", Justification = "As designed.")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#", Justification = "As designed.")]
-        public bool IsIdentical(XmlNode actual, XmlNode expected, out Diff differences)
+        public bool IsIdentical(XmlNode expected, XmlNode actual, out Diff differences)
         {
             differences = DiffBuilder.Compare(Input.FromNode(expected))   // https://github.com/xmlunit/user-guide/wiki/DiffBuilder
                                     .IgnoreComments()
@@ -316,12 +338,12 @@ namespace ChannelAdam.TestFramework.Xml
 
         #region Protected Change Methods
 
-        protected virtual void OnExpectedXmlChanged(XElement value)
+        protected virtual void OnExpectedXmlChanged(XNode value)
         {
             this.ExpectedXmlChangedEvent?.Invoke(this, new XmlChangedEventArgs(value));
         }
 
-        protected virtual void OnActualXmlChanged(XElement value)
+        protected virtual void OnActualXmlChanged(XNode value)
         {
             this.ActualXmlChangedEvent?.Invoke(this, new XmlChangedEventArgs(value));
         }

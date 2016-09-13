@@ -23,6 +23,7 @@ namespace ChannelAdam.TestFramework.Xml
     using System.Xml.Linq;
     using System.Xml.Serialization;
 
+    using Abstractions;
     using ChannelAdam.Core.Reflection;
     using ChannelAdam.Core.Xml;
     using ChannelAdam.Logging;
@@ -246,6 +247,15 @@ namespace ChannelAdam.TestFramework.Xml
         public void AssertActualOutputXmlEqualsExpectedOutputXml()
         {
             this.xmlTester.AssertActualXmlEqualsExpectedXml();
+        }
+
+        /// <summary>
+        /// Assert the Actual Output XML against the Expected Output XML, ignoring the elements specified by the given XML filter.
+        /// </summary>
+        /// <param name="xmlFilter">The XML filter to be applied to ignore specified elements from the assertion.</param>
+        public void AssertActualOutputXmlEqualsExpectedOutputXml(IXmlFilter xmlFilter)
+        {
+            this.xmlTester.AssertActualXmlEqualsExpectedXml(xmlFilter);
         }
 
         #endregion

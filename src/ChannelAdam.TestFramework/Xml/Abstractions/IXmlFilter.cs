@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="XmlChangedEventArgs.cs">
+// <copyright file="IXmlFilter.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -15,18 +15,21 @@
 // limitations under the License.
 //-----------------------------------------------------------------------
 
-namespace ChannelAdam.TestFramework.Xml
+namespace ChannelAdam.TestFramework.Xml.Abstractions
 {
-    using System;
+    using System.Collections.Generic;
     using System.Xml.Linq;
 
-    public class XmlChangedEventArgs : EventArgs
+    public interface IXmlFilter
     {
-        public XmlChangedEventArgs(XNode xml)
-        {
-            this.Xml = xml;
-        }
+        IList<string> ElementLocalNamesToIgnore { get; }
 
-        public XNode Xml { get; private set; }
+        IList<string> XPathsToIgnore { get; }
+
+        XElement ApplyFilterTo(XElement xmlElement);
+
+        bool HasFilters();
+
+        string ToString();
     }
 }

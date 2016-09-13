@@ -17,19 +17,18 @@
 
 namespace ChannelAdam.TestFramework.Xml
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Xml;
     using System.Xml.Linq;
     using System.Xml.XPath;
 
+    using Abstractions;
     using ChannelAdam.Logging;
 
     public class XmlAsserter
     {
-        private ISimpleLogger logger;
-        private ILogAsserter logAssert;
+        private readonly ISimpleLogger logger;
+        private readonly ILogAsserter logAssert;
 
         #region Constructors
 
@@ -45,12 +44,12 @@ namespace ChannelAdam.TestFramework.Xml
 
         #endregion
 
-        public void XPathValueEquals(string description, string xpath, XElement rootElement, string expected)
+        public void XPathValueEquals(string description, string xpath, XNode rootElement, string expected)
         {
-            XPathValueEquals(description, xpath, rootElement, null, expected);
+            this.XPathValueEquals(description, xpath, rootElement, null, expected);
         }
 
-        public void XPathValueEquals(string description, string xpath, XElement rootElement, XmlNamespaceManager namespaceManager, string expected)
+        public void XPathValueEquals(string description, string xpath, XNode rootElement, XmlNamespaceManager namespaceManager, string expected)
         {
             var elements = rootElement.XPathSelectElements(xpath, namespaceManager);
             if (!elements.Any())
@@ -63,12 +62,12 @@ namespace ChannelAdam.TestFramework.Xml
             }
         }
 
-        public void XPathValuesAreEqual(string description, string xpath, XElement expectedElements, XElement actualElements)
+        public void XPathValuesAreEqual(string description, string xpath, XNode expectedElements, XNode actualElements)
         {
-            XPathValuesAreEqual(description, xpath, expectedElements, xpath, actualElements);
+            this.XPathValuesAreEqual(description, xpath, expectedElements, xpath, actualElements);
         }
 
-        public void XPathValuesAreEqual(string description, string expectedXpath, XElement expectedElements, string actualXpath, XElement actualElements)
+        public void XPathValuesAreEqual(string description, string expectedXpath, XNode expectedElements, string actualXpath, XNode actualElements)
         {
             var expectedElement = expectedElements.XPathSelectElement(expectedXpath);
             var actualElement = actualElements.XPathSelectElement(actualXpath);
@@ -97,7 +96,7 @@ namespace ChannelAdam.TestFramework.Xml
             this.logAssert.AreEqual(description, expected, actual);
         }
 
-        public void XPathValuesAreEqual(string description, string expectedXpath, XElement expectedElements, XmlNamespaceManager expectedNamespaceManager, string actualXpath, XElement actualElements, XmlNamespaceManager actualNamespaceManager)
+        public void XPathValuesAreEqual(string description, string expectedXpath, XNode expectedElements, XmlNamespaceManager expectedNamespaceManager, string actualXpath, XNode actualElements, XmlNamespaceManager actualNamespaceManager)
         {
             var expected = expectedElements.XPathSelectElement(expectedXpath, expectedNamespaceManager).Value;
             var actual = actualElements.XPathSelectElement(actualXpath, actualNamespaceManager).Value;
@@ -105,48 +104,17 @@ namespace ChannelAdam.TestFramework.Xml
             this.logAssert.AreEqual(description, expected, actual);
         }
 
-        // TODO: rename these methods.
-        //
-        //public void DecendantsAreEqual(XElement expectedXml, XElement actualXml, string rootNodeLocalName)
-        //{
-        //    DecendantsAreEqual(expectedXml, actualXml, rootNodeLocalName, new List<string>());
-        //}
-
-        //public void DecendantsAreEqual(XElement expectedXml, XElement actualXml, string rootNodeLocalName, string excludeNodeLocalName)
-        //{
-        //    DecendantsAreEqual(expectedXml, actualXml, rootNodeLocalName, new List<string> { excludeNodeLocalName });
-        //}
-
-        //public void DecendantsAreEqual(XElement expectedXml, XElement actualXml, string rootNodeLocalName, List<string> excludeNodeLocalNames)
-        //{
-        //    var expected = expectedXml.DescendantsAndSelf().Single(e => e.Name.LocalName == rootNodeLocalName);
-        //    var actual = actualXml.DescendantsAndSelf().Single(e => e.Name.LocalName == rootNodeLocalName);
-
-        //    AreEqual(expected, actual, excludeNodeLocalNames);
-        //}
-
         public void AreEqual(XElement expectedXml, XElement actualXml)
         {
-            AreEqual(expectedXml, actualXml, new List<string>());
+            this.AreEqual(expectedXml, actualXml, null);
         }
 
-        public void AreEqual(XElement expectedXml, XElement actualXml, string excludeNodeLocalName)
+        public void AreEqual(XElement expectedXml, XElement actualXml, IXmlFilter xmlFilter)
         {
-            AreEqual(expectedXml, actualXml, new List<string> { excludeNodeLocalName });
-        }
-
-        public void AreEqual(XElement expectedXml, XElement actualXml, List<string> excludeNodeLocalNames)
-        {
-            var expected = new XElement(expectedXml);
-            var actual = new XElement(actualXml);
-
-            expected.DescendantsAndSelf().Where(p => excludeNodeLocalNames.Contains(p.Name.LocalName)).Remove();
-            actual.DescendantsAndSelf().Where(p => excludeNodeLocalNames.Contains(p.Name.LocalName)).Remove();
-
             var tester = new XmlTester(this.logAssert);
-            tester.ArrangeExpectedXml(expected);
-            tester.ArrangeActualXml(actual);
-            tester.AssertActualXmlEqualsExpectedXml();
+            tester.ArrangeExpectedXml(expectedXml);
+            tester.ArrangeActualXml(actualXml);
+            tester.AssertActualXmlEqualsExpectedXml(xmlFilter);
         }
     }
 }
