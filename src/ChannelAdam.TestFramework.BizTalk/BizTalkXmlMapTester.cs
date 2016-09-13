@@ -58,24 +58,40 @@ namespace ChannelAdam.TestFramework.BizTalk
 
         #region Public Methods
 
+        /// <summary>
+        /// Tests the map and performs validation on both the input and output XML.
+        /// </summary>
+        /// <param name="map">The map.</param>
         public void TestMap(TransformBase map)
         {
-            ValidateInputXml(map);
+            TestMap(map, true, true);
+        }
 
-            var inputFileName = Path.GetTempFileName();
-            CreateFile(inputFileName, InputXml.ToString());
-
-            var outputFileName = Path.GetTempFileName();
+        /// <summary>
+        /// Tests the map.
+        /// </summary>
+        /// <param name="map">The map to execute.</param>
+        /// <param name="validateInputXml">if set to <c>true</c> then the input XML is validated.</param>
+        /// <param name="validateOutputXml">if set to <c>true</c> then the output XML is validated.</param>
+        public void TestMap(TransformBase map, bool validateInputXml, bool validateOutputXml)
+        {
+            if (validateInputXml)
+            {
+                ValidateInputXml(map);
+            }
 
             this.logger.Log("Executing the map " + map.GetType().Name);
-            PerformTransform(map, inputFileName, outputFileName);
+            string outputXml = PerformTransform(map, this.InputXml);
+            this.logAssert.IsTrue("There was output from the map", !string.IsNullOrWhiteSpace(outputXml));
 
-            this.logAssert.IsTrue("Output file exists", File.Exists(outputFileName));
-            this.logger.Log("Map complete. Output file is: {0}", outputFileName);
+            base.SetActualOutputXmlFromXmlString(outputXml);
+            this.logger.Log();
+            this.logger.Log("Map completed");
 
-            base.SetActualOutputXmlFromXmlFile(outputFileName);
-
-            ValidateActualOutputXml(map);
+            if (validateOutputXml)
+            {
+                ValidateActualOutputXml(map);
+            }
         }
 
         public void ValidateInputXml(TransformBase map)
@@ -109,7 +125,9 @@ namespace ChannelAdam.TestFramework.BizTalk
 
         private static IEnumerable<SchemaReferenceAttribute> GetSchemaReferenceAttributes(TransformBase map)
         {
-            return System.Attribute.GetCustomAttributes(map.GetType(), typeof(Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute)).Cast<Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute>();
+            return System.Attribute.GetCustomAttributes(
+                map.GetType(),
+                typeof(Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute)).Cast<Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute>();
         }
 
         private static void ValidateXml(string xmlToValidate, IEnumerable<string> schemas, IEnumerable<SchemaReferenceAttribute> attrs)
@@ -146,12 +164,6 @@ namespace ChannelAdam.TestFramework.BizTalk
             return schemaBase.Schema;
         }
 
-        private static XmlNamespaceManager CreateNamespaceManagerFromFileXmlContents(string filename)
-        {
-            string xmlString = File.ReadAllText(filename);
-            return CreateNamespaceManagerFromXmlString(xmlString);
-        }
-
         private static XmlNamespaceManager CreateNamespaceManagerFromXmlString(string xml)
         {
             XmlReader reader = XmlReader.Create(new StringReader(xml));
@@ -160,32 +172,16 @@ namespace ChannelAdam.TestFramework.BizTalk
         }
 
         /// <summary>
-        /// Creates a file with the given output filename from the given embedded resource in the given assembly.
-        /// </summary>
-        /// <param name="fileName">Name of the output file.</param>
-        /// <param name="contents">Contents of the file to create.</param>
-        private static void CreateFile(string fileName, string contents)
-        {
-            var outputDirectoryPath = Path.GetDirectoryName(fileName);
-            if (!Directory.Exists(outputDirectoryPath))
-            {
-                Directory.CreateDirectory(outputDirectoryPath);
-            }
-
-            File.WriteAllText(fileName, contents);
-        }
-
-        /// <summary>
         /// Perform the transform using the map.
         /// </summary>
         /// <param name="map"></param>
-        /// <param name="inputXmlFile"></param>
-        /// <param name="outputXmlFile"></param>
+        /// <param name="inputXml"></param>
         /// <remarks>
         /// This fixes a bug in the Microsoft code and provides the actual exception message so devs can know why a map test failed...
         /// Reference: https://shadabanwer.wordpress.com/2013/06/14/map-unit-test-does-not-work-in-biztalk-2013-because-testablemapbase-class-is-not-correct/comment-page-1/#comment-72
         /// </remarks>
-        private void PerformTransform(TransformBase map, string inputXmlFile, string outputXmlFile)
+        /// <returns>The resulting XML output from the map.</returns>
+        private string PerformTransform(TransformBase map, XNode inputXml)
         {
             try
             {
@@ -195,35 +191,33 @@ namespace ChannelAdam.TestFramework.BizTalk
                     transform.Load(stylesheet, new XsltSettings(true, true), null);
                 }
 
-                using (var input = XmlReader.Create(inputXmlFile))
+                using (var input = XmlReader.Create(new StringReader(inputXml.ToString())))
                 {
-                    input.MoveToContent();
-
+                    var sb = new StringBuilder();
                     var settings = new XmlWriterSettings
                     {
                         Indent = true
                     };
 
-                    using (var results = XmlWriter.Create(outputXmlFile, settings))
+                    using (var results = XmlWriter.Create(sb, settings))
                     {
                         transform.Transform(input, map.TransformArgs, results);
                     }
+
+                    return sb.ToString();
                 }
             }
             catch (Exception exception)
             {
-                string errorMessage = string.Format("Unable to write output instance to the following <file:///{0}>.", outputXmlFile);
-
-                var builder = new StringBuilder(errorMessage);
+                var sb = new StringBuilder("An error occurred while executing the transform");
 
                 for (var currentException = exception; currentException != null; currentException = currentException.InnerException)
                 {
-                    builder
-                        .Append(Environment.NewLine)
-                        .Append(currentException.ToString());
+                    sb.Append(Environment.NewLine)
+                      .Append(currentException.ToString());
                 }
 
-                throw new BizTalkTestAssertFailException(builder.ToString());
+                throw new BizTalkTestAssertFailException(sb.ToString());
             }
         }
 
