@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ChannelAdam.TestFramework</id>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
     <title>ChannelAdam Test Framework Library</title>
     <authors>Adam Craven</authors>
     <owners>Adam Craven</owners>
@@ -12,6 +12,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>A foundational automated testing library designed to make it easier to implement test cases and to read their output. Includes helpers for testing XML differences.</description>
     <releaseNotes>
+1.4.0 - Changed method signature of XmlTester.IsIdentical to no longer return an out parameter. Xml differences are now available in a property named Differences.
 1.3.0 - Added filtering capability with the XmlFilter class allow ignoring specific nodes when performing assertions. Minor breaking changes to some XmlTester and XmlAsserter method signatures.
 1.2.2 - Added XmlAsserter class.
 1.2.1 - Added override methods for serialising using XmlRootAttribute and XmlAttributeOverrides.

@@ -43,6 +43,7 @@ namespace ChannelAdam.TestFramework.Xml
 
         private XElement actualXml;
         private XElement expectedXml;
+        private Diff differences;
 
         #endregion
 
@@ -110,6 +111,14 @@ namespace ChannelAdam.TestFramework.Xml
             {
                 this.expectedXml = value;
                 this.OnExpectedXmlChanged(value);
+            }
+        }
+
+        public Diff Differences
+        {
+            get
+            {
+                return this.differences;
             }
         }
 
@@ -254,7 +263,6 @@ namespace ChannelAdam.TestFramework.Xml
         /// <summary>
         /// Assert the actual XML against the expected XML.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "*", Justification = "Ignored.")]
         public void AssertActualXmlEqualsExpectedXml()
         {
             this.AssertActualXmlEqualsExpectedXml(null);
@@ -264,15 +272,12 @@ namespace ChannelAdam.TestFramework.Xml
         /// Assert the actual XML against the expected XML, ignoring the elements specified by the given XML filter.
         /// </summary>
         /// <param name="xmlFilter">The XML filter to be applied to ignore specified elements from the assertion.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "*", Justification = "Ignored.")]
         public void AssertActualXmlEqualsExpectedXml(IXmlFilter xmlFilter)
         {
-            Diff differences;
-
             this.logger.Log("Asserting actual and expected XML are equal");
 
-            XElement filteredExpectedXml = this.ExpectedXml;
-            XElement filteredActualXml = this.ActualXml;
+            var filteredExpectedXml = this.ExpectedXml;
+            var filteredActualXml = this.ActualXml;
 
             if (xmlFilter != null && xmlFilter.HasFilters())
             {
@@ -282,10 +287,10 @@ namespace ChannelAdam.TestFramework.Xml
                 filteredActualXml = xmlFilter.ApplyFilterTo(filteredActualXml);
             }
 
-            var isIdentical = this.IsIdentical(filteredExpectedXml, filteredActualXml, out differences);
+            var isIdentical = this.IsIdentical(filteredExpectedXml, filteredActualXml);
             if (!isIdentical)
             {
-                var report = differences.ToString();
+                var report = this.differences.ToString();
                 this.logger.Log("The differences are: " + Environment.NewLine + report);
             }
 
@@ -297,39 +302,35 @@ namespace ChannelAdam.TestFramework.Xml
 
         #region Utility Methods
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "0#", Justification = "As designed.")]
-        public bool IsIdentical(out Diff differences)
+        public bool IsIdentical()
         {
-            return this.IsIdentical(this.ExpectedXml, this.ActualXml, out differences);
+            return this.IsIdentical(this.ExpectedXml, this.ActualXml);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#", Justification = "As designed.")]
-        public bool IsIdentical(XNode expected, XNode actual, out Diff differences)
+        public bool IsIdentical(XNode expected, XNode actual)
         {
-            return this.IsIdentical(expected.ToXmlNode(), actual.ToXmlNode(), out differences);
+            return this.IsIdentical(expected.ToXmlNode(), actual.ToXmlNode());
         }
 
         /// <summary>
         /// Determines if the given actual and expected XML is identical.
         /// </summary>
-        /// <param name="expected">The expected.</param>
-        /// <param name="actual">The actual.</param>
-        /// <param name="differences">The differences.</param>
+        /// <param name="expected">The expected node.</param>
+        /// <param name="actual">The actual node.</param>
         /// <returns>
         /// The XML differences.
         /// </returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1059:MembersShouldNotExposeCertainConcreteTypes", MessageId = "System.Xml.XmlNode", Justification = "As designed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#", Justification = "As designed.")]
-        public bool IsIdentical(XmlNode expected, XmlNode actual, out Diff differences)
+        public bool IsIdentical(XmlNode expected, XmlNode actual)
         {
-            differences = DiffBuilder.Compare(Input.FromNode(expected))   // https://github.com/xmlunit/user-guide/wiki/DiffBuilder
+            this.differences = DiffBuilder.Compare(Input.FromNode(expected))   // https://github.com/xmlunit/user-guide/wiki/DiffBuilder
                                     .IgnoreComments()
                                     .CheckForSimilar()      // ignore child order, namespace prefixes etc - https://github.com/xmlunit/user-guide/wiki/DifferenceEvaluator#default-differenceevaluator
                                     .WithComparisonFormatter(this.comparisonFormatter)
                                     .WithTest(Input.FromNode(actual))
                                     .Build();
 
-            return !differences.HasDifferences();
+            return !this.differences.HasDifferences();
         }
 
         #endregion
