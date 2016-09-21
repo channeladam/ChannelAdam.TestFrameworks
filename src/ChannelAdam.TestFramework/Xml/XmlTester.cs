@@ -290,7 +290,7 @@ namespace ChannelAdam.TestFramework.Xml
             var isEqual = this.IsEqual(filteredExpectedXml, filteredActualXml);
             if (!isEqual)
             {
-                var report = this.differences.ToString();
+                var report = string.Join("." + Environment.NewLine, this.differences.Differences);
                 this.logger.Log("The differences are: " + Environment.NewLine + report);
             }
 
