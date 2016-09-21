@@ -272,7 +272,7 @@ namespace ChannelAdam.TestFramework.Xml
         /// Assert the actual XML against the expected XML, ignoring the elements specified by the given XML filter.
         /// </summary>
         /// <param name="xmlFilter">The XML filter to be applied to ignore specified elements from the assertion.</param>
-        public void AssertActualXmlEqualsExpectedXml(IXmlFilter xmlFilter)
+        public virtual void AssertActualXmlEqualsExpectedXml(IXmlFilter xmlFilter)
         {
             this.logger.Log("Asserting actual and expected XML are equal");
 
@@ -287,14 +287,14 @@ namespace ChannelAdam.TestFramework.Xml
                 filteredActualXml = xmlFilter.ApplyFilterTo(filteredActualXml);
             }
 
-            var isIdentical = this.IsIdentical(filteredExpectedXml, filteredActualXml);
-            if (!isIdentical)
+            var isEqual = this.IsEqual(filteredExpectedXml, filteredActualXml);
+            if (!isEqual)
             {
                 var report = this.differences.ToString();
                 this.logger.Log("The differences are: " + Environment.NewLine + report);
             }
 
-            this.logAssert.IsTrue("The XML is as expected", isIdentical);
+            this.logAssert.IsTrue("The XML is as expected", isEqual);
             this.logger.Log("The XML is as expected");
         }
 
@@ -302,18 +302,18 @@ namespace ChannelAdam.TestFramework.Xml
 
         #region Utility Methods
 
-        public bool IsIdentical()
+        public bool IsEqual()
         {
-            return this.IsIdentical(this.ExpectedXml, this.ActualXml);
+            return this.IsEqual(this.ExpectedXml, this.ActualXml);
         }
 
-        public bool IsIdentical(XNode expected, XNode actual)
+        public bool IsEqual(XNode expected, XNode actual)
         {
-            return this.IsIdentical(expected.ToXmlNode(), actual.ToXmlNode());
+            return this.IsEqual(expected.ToXmlNode(), actual.ToXmlNode());
         }
 
         /// <summary>
-        /// Determines if the given actual and expected XML is identical.
+        /// Determines if the given actual and expected XML is equivalent.
         /// </summary>
         /// <param name="expected">The expected node.</param>
         /// <param name="actual">The actual node.</param>
@@ -321,13 +321,17 @@ namespace ChannelAdam.TestFramework.Xml
         /// The XML differences.
         /// </returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1059:MembersShouldNotExposeCertainConcreteTypes", MessageId = "System.Xml.XmlNode", Justification = "As designed.")]
-        public bool IsIdentical(XmlNode expected, XmlNode actual)
+        public virtual bool IsEqual(XmlNode expected, XmlNode actual)
         {
-            this.differences = DiffBuilder.Compare(Input.FromNode(expected))   // https://github.com/xmlunit/user-guide/wiki/DiffBuilder
-                                    .IgnoreComments()
-                                    .CheckForSimilar()      // ignore child order, namespace prefixes etc - https://github.com/xmlunit/user-guide/wiki/DifferenceEvaluator#default-differenceevaluator
-                                    .WithComparisonFormatter(this.comparisonFormatter)
+            // XMLUnit's DiffBuilder - https://github.com/xmlunit/user-guide/wiki/DiffBuilder
+            // Do NOT ignore whitespace because that trims text node values which is destructive and not equivalent in enterprise systems.
+            this.differences = DiffBuilder.Compare(Input.FromNode(expected))
                                     .WithTest(Input.FromNode(actual))
+                                    .IgnoreComments()
+                                    .CheckForSimilar()                  // ignore child order, namespace prefixes etc - https://github.com/xmlunit/user-guide/wiki/DifferenceEvaluator#default-differenceevaluator
+                                    .WithNodeMatcher(new DefaultNodeMatcher(ElementSelectors.ByName)) // allows for comparisons of nodes in different order
+                                    .WithDifferenceEvaluator(DifferenceEvaluators.Chain(DifferenceEvaluators.Default, IgnoreElementTagNameDifferenceEvaluator.Evaluate))
+                                    .WithComparisonFormatter(this.comparisonFormatter)
                                     .Build();
 
             return !this.differences.HasDifferences();

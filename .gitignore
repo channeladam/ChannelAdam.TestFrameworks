@@ -22,3 +22,6 @@
 /src/ChannelAdam.TestFramework.BizTalk/Lib/BizTalk2010
 /src/ChannelAdam.TestFramework.BizTalk/obj/Debug
 /src/ChannelAdam.TestFramework.BizTalk/packages
+/src/ChannelAdam.TestFramework.BehaviourSpecs/bin/Debug
+/src/ChannelAdam.TestFramework.BehaviourSpecs/obj/Debug
+/src/ChannelAdam.TestFramework.Nancy/obj/Debug
