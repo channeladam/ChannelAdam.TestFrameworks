@@ -32,6 +32,7 @@ namespace ChannelAdam.TestFramework.BizTalk
     using Microsoft.XLANGs.BaseTypes;
     using Microsoft.BizTalk.TestTools;
     using Logging;
+    using Core.Xml;
 
     public class BizTalkXmlMapTester : XmlMapTester
     {
@@ -132,7 +133,7 @@ namespace ChannelAdam.TestFramework.BizTalk
 
         private static void ValidateXml(string xmlToValidate, IEnumerable<string> schemas, IEnumerable<SchemaReferenceAttribute> attrs)
         {
-            string validationErrors = string.Empty;
+            var validationErrors = string.Empty;
 
             var schemaSet = new XmlSchemaSet();
 
@@ -141,14 +142,8 @@ namespace ChannelAdam.TestFramework.BizTalk
                 schemaSet.Add(LoadSchema(schema, attrs));
             }
 
-            var doc = XDocument.Parse(xmlToValidate);
-
-            doc.Validate(schemaSet, (o, e) => { validationErrors += e.Message + Environment.NewLine; });
-
-            if (validationErrors.Any())
-            {
-                throw new XmlSchemaValidationException(validationErrors);
-            }
+            var xmlValidator = new XmlValidator();
+            xmlValidator.ValidateXml(xmlToValidate, schemaSet);
         }
 
         private static XmlSchema LoadSchema(string schemaName, IEnumerable<SchemaReferenceAttribute> attrs)
