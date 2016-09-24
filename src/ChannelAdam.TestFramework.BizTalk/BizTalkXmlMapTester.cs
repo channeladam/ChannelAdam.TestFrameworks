@@ -28,11 +28,11 @@ namespace ChannelAdam.TestFramework.BizTalk
     using System.Xml.Xsl;
 
     using ChannelAdam.TestFramework.Xml;
+    using ChannelAdam.Xml;
 
+    using Logging;
     using Microsoft.XLANGs.BaseTypes;
     using Microsoft.BizTalk.TestTools;
-    using Logging;
-    using Core.Xml;
 
     public class BizTalkXmlMapTester : XmlMapTester
     {
