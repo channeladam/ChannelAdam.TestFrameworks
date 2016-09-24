@@ -24,9 +24,9 @@ namespace ChannelAdam.TestFramework.Xml
     using System.Xml.Serialization;
 
     using Abstractions;
-    using Core.Reflection;
-    using Core.Xml;
-    using Logging;
+    using ChannelAdam.Logging;
+    using ChannelAdam.Reflection;
+    using ChannelAdam.Xml;
     using Org.XmlUnit.Builder;
     using Org.XmlUnit.Diff;
 

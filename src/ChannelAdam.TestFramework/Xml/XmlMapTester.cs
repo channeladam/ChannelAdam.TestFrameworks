@@ -24,9 +24,9 @@ namespace ChannelAdam.TestFramework.Xml
     using System.Xml.Serialization;
 
     using Abstractions;
-    using ChannelAdam.Core.Reflection;
-    using ChannelAdam.Core.Xml;
     using ChannelAdam.Logging;
+    using ChannelAdam.Reflection;
+    using ChannelAdam.Xml;
 
     public class XmlMapTester
     {
