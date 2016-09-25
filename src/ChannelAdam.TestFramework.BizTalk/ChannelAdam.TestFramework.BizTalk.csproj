@@ -36,7 +36,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ChannelAdam.TestFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9fcb9bb550152cab, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChannelAdam.TestFramework.1.5.2\lib\net40\ChannelAdam.TestFramework.dll</HintPath>
+      <HintPath>..\packages\ChannelAdam.TestFramework.1.5.4\lib\net40\ChannelAdam.TestFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.BizTalk.ExplorerOM">
@@ -45,6 +45,10 @@
     <Reference Include="Microsoft.BizTalk.TestTools, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\BizTalk2010\Microsoft.BizTalk.TestTools.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.TOM, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\BizTalk2010\Microsoft.BizTalk.TOM.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.XLANGs.BaseTypes">
       <HintPath>Lib\BizTalk2010\Microsoft.XLANGs.BaseTypes.dll</HintPath>
@@ -67,8 +71,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BizTalkFlatFileToFlatFileMapTester.cs" />
     <Compile Include="BizTalkOperationsHelper.cs" />
+    <Compile Include="BizTalkFlatFileToXmlMapTester.cs" />
+    <Compile Include="Helpers\BizTalkXmlMapTestValidator.cs" />
+    <Compile Include="Helpers\BizTalkXmlMapTestExecutor.cs" />
     <Compile Include="BizTalkXmlMapTester.cs" />
+    <Compile Include="Helpers\BizTalkMapSchemaLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +86,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
