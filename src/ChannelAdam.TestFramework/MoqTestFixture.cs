@@ -26,8 +26,6 @@ namespace ChannelAdam.TestFramework
     /// </summary>
     public abstract class MoqTestFixture : TestEasy
     {
-        private MockRepository mockRepository;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MoqTestFixture" /> class.
         /// </summary>
@@ -56,7 +54,7 @@ namespace ChannelAdam.TestFramework
         protected MoqTestFixture(MockBehavior mockBehaviour, ISimpleLogger logger, ILogAsserter logAssert)
             : base(logger, logAssert)
         {
-            this.mockRepository = new MockRepository(mockBehaviour);
+            this.MyMockRepository = new MockRepository(mockBehaviour);
         }
 
         #region Properties
@@ -67,13 +65,7 @@ namespace ChannelAdam.TestFramework
         /// <value>
         /// My mock repository.
         /// </value>
-        public MockRepository MyMockRepository
-        {
-            get
-            {
-                return this.mockRepository;
-            }
-        }
+        public MockRepository MyMockRepository { get; }
 
         #endregion
     }

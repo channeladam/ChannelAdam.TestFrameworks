@@ -5,8 +5,8 @@
     using ChannelAdam.TestFramework.Xml;
 
     [Binding]
-    public class XmlTestingUnitSteps : MoqTestFixture {
-
+    public class XmlTestingUnitSteps : MoqTestFixture
+    {
         #region Fields
 
         private XmlTester xmlTester;

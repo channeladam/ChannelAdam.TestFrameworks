@@ -75,6 +75,7 @@
     <Compile Include="Xml\XmlAsserter.cs" />
     <Compile Include="Xml\XmlChangedEventArgs.cs" />
     <Compile Include="Xml\XmlFilter.cs" />
+    <Compile Include="Xml\XmlMapTesterBase.cs" />
     <Compile Include="Xml\XmlMapTester.cs" />
     <Compile Include="Xml\XmlTester.cs" />
   </ItemGroup>
