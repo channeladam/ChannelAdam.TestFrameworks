@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ChannelAdam.TestFramework</id>
-    <version>1.5.3</version>
+    <version>1.5.4</version>
     <title>ChannelAdam Test Framework Library</title>
     <authors>Adam Craven</authors>
     <owners>Adam Craven</owners>
@@ -12,6 +12,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>A foundational automated testing library designed to make it easier to implement test cases and to read their output. Includes helpers for testing XML differences.</description>
     <releaseNotes>
+1.5.4 - Expose LogAssert in the XmlMapTesterBase.
 1.5.3 - Split XmlMapTester to have a reusable base class.
 1.5.2 - Updated to ChannelAdam.Core 1.4.0
 1.5.1 - Fixed output from XmlTester assertion to log out all differences instead of just the first.

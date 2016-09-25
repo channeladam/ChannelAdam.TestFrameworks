@@ -43,6 +43,7 @@ namespace ChannelAdam.TestFramework.Xml
         protected XmlMapTesterBase(ISimpleLogger logger, ILogAsserter logAsserter)
         {
             this.Logger = logger;
+            this.LogAssert = logAsserter;
             this.xmlTester = new XmlTester(logAsserter);
             this.xmlTester.ActualXmlChangedEvent += this.XmlTester_ActualXmlChangedEvent;
             this.xmlTester.ExpectedXmlChangedEvent += this.XmlTester_ExpectedXmlChangedEvent;
@@ -70,7 +71,9 @@ namespace ChannelAdam.TestFramework.Xml
             get { return this.xmlTester.ExpectedXml; }
         }
 
-        protected ISimpleLogger Logger { get; }
+        protected ISimpleLogger Logger { get; private set; }
+
+        protected ILogAsserter LogAssert { get; private set; }
 
         #endregion
 
