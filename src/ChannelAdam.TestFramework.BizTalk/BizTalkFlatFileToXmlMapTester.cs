@@ -18,19 +18,14 @@
 namespace ChannelAdam.TestFramework.BizTalk
 {
     using System;
-    using System.IO;
-    using System.Linq;
+    using System.Reflection;
+    using System.Xml.Linq;
 
     using ChannelAdam.TestFramework.Xml;
-
+    using Helpers;
     using Logging;
     using Microsoft.XLANGs.BaseTypes;
-    using Microsoft.BizTalk.TestTools;
     using Reflection;
-    using System.Reflection;
-    using Microsoft.BizTalk.TOM;
-    using Helpers;
-    using System.Xml.Linq;
 
     public class BizTalkFlatFileToXmlMapTester : XmlMapTesterBase
     {
@@ -96,7 +91,7 @@ namespace ChannelAdam.TestFramework.BizTalk
         /// <param name="validateOutput">if set to <c>true</c> then the output is validated.</param>
         public void TestMap(TransformBase map, bool validateInput, bool validateOutput)
         {
-            XNode inputXml = ConvertFlatFileContentsToXml(map, this.InputFlatFileContents);
+            XNode inputXml = BizTalkXmlFlatFileAdapter.ConvertInputFlatFileContentsToXml(map, this.InputFlatFileContents);
 
             if (validateInput)
             {
@@ -104,9 +99,8 @@ namespace ChannelAdam.TestFramework.BizTalk
             }
 
             Logger.Log("Executing the map " + map.GetType().Name);
-            string outputXml = BizTalkXmlMapTestExecutor.PerformTransform(map, inputXml);
+            string outputXml = BizTalkXmlMapExecutor.PerformTransform(map, inputXml);
             LogAssert.IsTrue("There was output from the map", !string.IsNullOrWhiteSpace(outputXml));
-
 
             base.SetActualOutputXmlFromXmlString(outputXml);
             Logger.Log();
@@ -114,62 +108,8 @@ namespace ChannelAdam.TestFramework.BizTalk
 
             if (validateOutput)
             {
-                BizTalkXmlMapTestValidator.ValidateActualOutputXml(map, this.ActualOutputXml, this.Logger);
+                BizTalkXmlMapTestValidator.ValidateOutputXml(map, this.ActualOutputXml, this.Logger);
             }
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private static XNode ConvertFlatFileContentsToXml(TransformBase map, string inputFlatFileContents)
-        {
-            ITOMErrorInfo[] validationErrors;
-            string errorMessage = null;
-            string convertedXml = null;
-
-            var tempInputFlatFileFilename = Path.GetTempFileName();
-
-            try
-            {
-                CMapperSchemaTree sourceSchemaTree = CreateSchemaTree(map);
-
-                string sourceSchemaClassName = map.SourceSchemas[0];
-                if (!sourceSchemaTree.LoadFromDotNetPath(sourceSchemaClassName, null, out errorMessage))
-                {
-                    throw new BizTalkTestAssertFailException($"An error occurred while loading the source schema type '{sourceSchemaClassName}': {errorMessage}");
-                }
-
-                File.WriteAllText(tempInputFlatFileFilename, inputFlatFileContents);
-
-                if (!sourceSchemaTree.ValidateInstance(tempInputFlatFileFilename, OutputInstanceType.Native, sourceSchemaClassName, out validationErrors, out convertedXml))
-                {
-                    var messages = validationErrors.Select(e => $"Line:{e.LineNumber} Position:{e.LinePosition} {(e.IsWarning ? "Warning: " : "Error: ")} {e.ErrorInfo}");
-                    var message = string.Join(". " + Environment.NewLine, messages);
-                    throw new BizTalkTestAssertFailException($"An error occurred while parsing/converting the contents of the flat file to XML: {Environment.NewLine}{message}");
-                }
-            }
-            finally
-            {
-                if (File.Exists(tempInputFlatFileFilename))
-                {
-                    File.Delete(tempInputFlatFileFilename);
-                }
-            }
-
-            return XElement.Parse(convertedXml);
-        }
-
-        private static CMapperSchemaTree CreateSchemaTree(TransformBase map)
-        {
-            var schemaLoader = new BizTalkMapSchemaLoader(map);
-            var schemaResolveHandler = new SchemaResolver();
-            schemaResolveHandler.CustomResolution(schemaLoader);
-
-            var schemaTree = new CMapperSchemaTree();
-            schemaTree.SetSchemaResolveHandler(schemaResolveHandler);
-
-            return schemaTree;
         }
 
         #endregion

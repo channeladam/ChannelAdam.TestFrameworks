@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BizTalkMapSchemaLoader.cs">
+// <copyright file="BizTalkMapSchemaArtifactLoader.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -18,12 +18,11 @@
 namespace ChannelAdam.TestFramework.BizTalk.Helpers
 {
     using System;
-    using System.Reflection;
 
     using Microsoft.BizTalk.TOM;
     using Microsoft.XLANGs.BaseTypes;
 
-    public class BizTalkMapSchemaLoader : ILoadArtifact
+    public class BizTalkMapSchemaArtifactLoader : ILoadArtifact
     {
         #region Private Fields
 
@@ -33,7 +32,7 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
         #region Public Constructors
 
-        public BizTalkMapSchemaLoader(TransformBase map)
+        public BizTalkMapSchemaArtifactLoader(TransformBase map)
         {
             this.mapperType = map.GetType();
         }
@@ -42,27 +41,14 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
         #region Public Methods
 
-        public string GetSchemaFromLoadPath(string strLoadPath)
+        public string GetSchemaFromLoadPath(string schemaTypeNameToLoad)
         {
-            if (!string.IsNullOrWhiteSpace(strLoadPath))
+            if (!string.IsNullOrWhiteSpace(schemaTypeNameToLoad))
             {
-                Type schemaType = this.mapperType.Assembly.GetType(strLoadPath);
+                Type schemaType = BizTalkMapSchemaUtility.FindSchemaViaAssembly(schemaTypeNameToLoad, this.mapperType.Assembly);
                 if (schemaType != null)
                 {
-                    return GetXmlContent(schemaType);
-                }
-
-                foreach (AssemblyName name in this.mapperType.Assembly.GetReferencedAssemblies())
-                {
-                    Assembly assembly = AppDomain.CurrentDomain.Load(name);
-                    if (assembly != null)
-                    {
-                        schemaType = assembly.GetType(strLoadPath);
-                        if (schemaType != null)
-                        {
-                            return GetXmlContent(schemaType);
-                        }
-                    }
+                    return BizTalkMapSchemaUtility.LoadSchemaBase(schemaType).XmlContent;
                 }
             }
 
@@ -70,16 +56,5 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
         }
 
         #endregion Public Methods
-
-        #region Private Methods
-
-        private static string GetXmlContent(Type schemaType)
-        {
-            SchemaBase schema = Activator.CreateInstance(schemaType) as SchemaBase;
-            return schema.XmlContent;
-        }
-
-        #endregion Private Methods
-
     }
 }

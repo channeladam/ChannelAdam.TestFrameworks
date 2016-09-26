@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BizTalkXmlMapTestExecutor.cs">
+// <copyright file="BizTalkXmlMapExecutor.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -25,9 +25,8 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
     using System.Xml.Xsl;
 
     using Microsoft.XLANGs.BaseTypes;
-    using Microsoft.BizTalk.TestTools;
 
-    public static class BizTalkXmlMapTestExecutor
+    public static class BizTalkXmlMapExecutor
     {
         #region Public Methods
 
@@ -41,11 +40,7 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
         {
             try
             {
-                var transform = new XslCompiledTransform();
-                using (var stylesheet = new XmlTextReader(new StringReader(map.XmlContent)))
-                {
-                    transform.Load(stylesheet, new XsltSettings(true, true), null);
-                }
+                XslCompiledTransform transform = LoadStylesheetFromMap(map);
 
                 using (var input = XmlReader.Create(new StringReader(inputXml.ToString())))
                 {
@@ -75,8 +70,19 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
                     currentException = currentException.InnerException;
                 }
 
-                throw new BizTalkTestAssertFailException(sb.ToString());
+                throw new ApplicationException(sb.ToString());
             }
+        }
+
+        private static XslCompiledTransform LoadStylesheetFromMap(TransformBase map)
+        {
+            var transform = new XslCompiledTransform();
+            using (var stylesheet = new XmlTextReader(new StringReader(map.XmlContent)))
+            {
+                transform.Load(stylesheet, new XsltSettings(true, true), null);
+            }
+
+            return transform;
         }
 
         #endregion

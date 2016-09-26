@@ -27,7 +27,8 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
     using Logging;
     using Microsoft.XLANGs.BaseTypes;
-    using Microsoft.BizTalk.TestTools;
+    using Microsoft.BizTalk.TOM;
+    using System.IO;
 
     public static class BizTalkXmlMapTestValidator
     {
@@ -35,55 +36,79 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
         public static void ValidateInputXml(TransformBase map, XNode inputXml, ISimpleLogger logger)
         {
-            var attrs = GetSchemaReferenceAttributes(map);
             logger.Log("Validating the input XML");
-            ValidateXml(inputXml.ToString(), map.SourceSchemas, attrs);
+            ValidateXml(inputXml.ToString(), map.SourceSchemas, BizTalkMapSchemaUtility.GetSchemaReferenceAttributes(map));
         }
 
-        public static void ValidateActualOutputXml(TransformBase map, XNode actualOutputXml, ISimpleLogger logger)
+        public static void ValidateOutputXml(TransformBase map, XNode outputXml, ISimpleLogger logger)
         {
-            var attrs = GetSchemaReferenceAttributes(map);
-            logger.Log("Validating the actual output XML");
-            ValidateXml(actualOutputXml.ToString(), map.TargetSchemas, attrs);
+            logger.Log("Validating the output XML");
+            ValidateXml(outputXml.ToString(), map.TargetSchemas, BizTalkMapSchemaUtility.GetSchemaReferenceAttributes(map));
         }
 
-        #endregion
-
-        #region Private Methods
-
-        private static IEnumerable<SchemaReferenceAttribute> GetSchemaReferenceAttributes(TransformBase map)
-        {
-            return System.Attribute.GetCustomAttributes(
-                map.GetType(),
-                typeof(Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute)).Cast<Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute>();
-        }
-
-        private static void ValidateXml(string xmlToValidate, IEnumerable<string> schemas, IEnumerable<SchemaReferenceAttribute> attrs)
+        public static void ValidateXml(string xmlToValidate, IEnumerable<string> schemas, IEnumerable<SchemaReferenceAttribute> schemaReferenceAttributes)
         {
             var validationErrors = string.Empty;
 
             var schemaSet = new XmlSchemaSet();
-
             foreach (var schema in schemas)
             {
-                schemaSet.Add(LoadSchema(schema, attrs));
+                schemaSet.Add(BizTalkMapSchemaUtility.LoadSchema(schema, schemaReferenceAttributes));
             }
 
             var xmlValidator = new XmlValidator();
             xmlValidator.ValidateXml(xmlToValidate, schemaSet);
         }
 
-        private static XmlSchema LoadSchema(string schemaName, IEnumerable<SchemaReferenceAttribute> attrs)
-        {
-            Type schemasType = attrs.First(a => a.Reference == schemaName).Type;
-            var schemaBase = Activator.CreateInstance(schemasType) as Microsoft.XLANGs.BaseTypes.SchemaBase;
 
-            if (schemaBase == null)
+        /// <summary>
+        /// Validates the given flat file contents.
+        /// </summary>
+        /// <param name="flatFileContents">The contents of the flat file to validate.</param>
+        /// <param name="schemaTreeWithLoadedSchema">The schema tree with the schema loaded.</param>
+        /// <param name="schemaClassName">The name of the schema class.</param>
+        /// <returns>The flat file contents converted to XML.</returns>
+        /// <exception cref="ApplicationException">When there is a validation error.</exception>
+        public static string ValidateFlatFileContents(string flatFileContents, CMapperSchemaTree schemaTreeWithLoadedSchema, string schemaClassName)
+        {
+            var tempFlatFileFilename = Path.GetTempFileName();
+
+            try
             {
-                throw new BizTalkTestAssertFailException("Could not cast to a SchemaBase");
+                File.WriteAllText(tempFlatFileFilename, flatFileContents);
+
+                return ValidateFlatFile(tempFlatFileFilename, schemaTreeWithLoadedSchema, schemaClassName);
+            }
+            finally
+            {
+                if (File.Exists(tempFlatFileFilename))
+                {
+                    File.Delete(tempFlatFileFilename);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validates the given flat file.
+        /// </summary>
+        /// <param name="flatFileFilename">The name of the flat file to validate.</param>
+        /// <param name="schemaTreeWithLoadedSchema">The schema tree with the schema loaded.</param>
+        /// <param name="schemaClassName">The name of the schema class.</param>
+        /// <returns>The flat file contents converted to XML.</returns>
+        /// <exception cref="ApplicationException">When there is a validation error.</exception>
+        public static string ValidateFlatFile(string flatFileFilename, CMapperSchemaTree schemaTreeWithLoadedSchema, string schemaClassName)
+        {
+            ITOMErrorInfo[] validationErrors = null;
+            string xmlOutput = null;
+
+            if (!schemaTreeWithLoadedSchema.ValidateInstance(flatFileFilename, Microsoft.BizTalk.TOM.OutputInstanceType.Native, schemaClassName, out validationErrors, out xmlOutput))
+            {
+                var messages = validationErrors.Select(e => $"Line:{e.LineNumber} Position:{e.LinePosition} {(e.IsWarning ? "Warning: " : "Error: ")} {e.ErrorInfo}");
+                var message = string.Join(". " + Environment.NewLine, messages);
+                throw new ApplicationException($"An error occurred while parsing/validating the contents of the flat file, or converting it to XML: {Environment.NewLine}{message}");
             }
 
-            return schemaBase.Schema;
+            return xmlOutput;
         }
 
         #endregion

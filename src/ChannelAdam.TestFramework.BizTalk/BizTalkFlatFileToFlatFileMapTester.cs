@@ -18,19 +18,14 @@
 namespace ChannelAdam.TestFramework.BizTalk
 {
     using System;
-    using System.IO;
-    using System.Linq;
+    using System.Reflection;
+    using System.Xml.Linq;
 
     using ChannelAdam.TestFramework.Xml;
-
     using Logging;
     using Microsoft.XLANGs.BaseTypes;
-    using Microsoft.BizTalk.TestTools;
     using Reflection;
-    using System.Reflection;
-    using Microsoft.BizTalk.TOM;
     using Helpers;
-    using System.Xml.Linq;
 
     public class BizTalkFlatFileToFlatFileMapTester : XmlMapTesterBase
     {
@@ -50,6 +45,8 @@ namespace ChannelAdam.TestFramework.BizTalk
 
         public string InputFlatFileContents { get; private set; }
 
+        public string ActualOutputFlatFileContents { get; private set; }
+
         #endregion
 
         #region Public Methods
@@ -63,14 +60,14 @@ namespace ChannelAdam.TestFramework.BizTalk
         /// <param name="resourceName">The name of the resource.</param>
         public void ArrangeInputFlatFile(Assembly assembly, string resourceName)
         {
-            this.ArrangeInputFlatFile(EmbeddedResource.GetAsString(assembly, resourceName));
+            this.ArrangeInputFlatFileContents(EmbeddedResource.GetAsString(assembly, resourceName));
         }
 
         /// <summary>
         /// Arrange the input flat file from the given string.
         /// </summary>
         /// <param name="value">The string to use as input.</param>
-        public void ArrangeInputFlatFile(string value)
+        public void ArrangeInputFlatFileContents(string value)
         {
             Logger.Log();
             Logger.Log($"The input flat file contents for the map is: {Environment.NewLine}{value}");
@@ -96,7 +93,7 @@ namespace ChannelAdam.TestFramework.BizTalk
         /// <param name="validateOutput">if set to <c>true</c> then the output is validated.</param>
         public void TestMap(TransformBase map, bool validateInput, bool validateOutput)
         {
-            XNode inputXml = ConvertFlatFileContentsToXml(map, this.InputFlatFileContents);
+            XNode inputXml = BizTalkXmlFlatFileAdapter.ConvertInputFlatFileContentsToXml(map, this.InputFlatFileContents);
 
             if (validateInput)
             {
@@ -104,9 +101,8 @@ namespace ChannelAdam.TestFramework.BizTalk
             }
 
             Logger.Log("Executing the map " + map.GetType().Name);
-            string outputXml = BizTalkXmlMapTestExecutor.PerformTransform(map, inputXml);
+            string outputXml = BizTalkXmlMapExecutor.PerformTransform(map, inputXml);
             LogAssert.IsTrue("There was output from the map", !string.IsNullOrWhiteSpace(outputXml));
-
 
             base.SetActualOutputXmlFromXmlString(outputXml);
             Logger.Log();
@@ -114,101 +110,16 @@ namespace ChannelAdam.TestFramework.BizTalk
 
             if (validateOutput)
             {
-                BizTalkXmlMapTestValidator.ValidateActualOutputXml(map, this.ActualOutputXml, this.Logger);
+                BizTalkXmlMapTestValidator.ValidateOutputXml(map, this.ActualOutputXml, this.Logger);
             }
 
-            if (!DoesMapOutputXml(map))
+            var schemaTree = BizTalkMapSchemaUtility.CreateSchemaTreeAndLoadSchema(map, map.TargetSchemas[0]);
+            if (!schemaTree.IsStandardXML)
             {
-                ConvertXmlOutputToFlatFile();
-                ValidateFlatFileOutput();
-
-                //ITOMErrorInfo[] infoArray3;
-                //ITOMErrorInfo[] infoArray4;
-                //string str9;
-                //if (!tree4.CreateNativeInstanceFromXMLInstance(outputXmlFile, outputInstanceFilename, out infoArray3))
-                //{
-                //    throw new BizTalkTestAssertFailException(Resource.IDS_COMPILER_INTERNAL_GENERATE_SCHEMA_INSTANCE_FAILURE);
-                //}
-                //if (mapper.ValidateOutput && !tree4.ValidateInstance(outputInstanceFilename, Microsoft.BizTalk.TOM.OutputInstanceType.Native, schemaClassName, out infoArray4, out str9))
-                //{
-                //    throw new BizTalkTestAssertFailException(Resource.IDS_COMPILER_INTERNAL_OUTPUT_VALIADATION_FAILURE);
-                //}
-
+                this.ActualOutputFlatFileContents = BizTalkXmlFlatFileAdapter.ConvertOutputXmlToFlatFileContents(map, this.ActualOutputXml, validateOutput);
+                this.Logger.Log();
+                this.Logger.Log($"The actual output flat file contents from the map is: {Environment.NewLine}{this.ActualOutputFlatFileContents}");
             }
-        }
-
-        #endregion
-
-        #region Private Methods
-
-
-        TODO - refactor this into a helper....
-
-
-
-        private static XNode ConvertFlatFileContentsToXml(TransformBase map, string inputFlatFileContents)
-        {
-            ITOMErrorInfo[] validationErrors;
-            string errorMessage = null;
-            string convertedXml = null;
-
-            var tempInputFlatFileFilename = Path.GetTempFileName();
-
-            try
-            {
-                CMapperSchemaTree sourceSchemaTree = CreateSchemaTree(map);
-
-                string sourceSchemaClassName = map.SourceSchemas[0];
-                if (!sourceSchemaTree.LoadFromDotNetPath(sourceSchemaClassName, null, out errorMessage))
-                {
-                    throw new BizTalkTestAssertFailException($"An error occurred while loading the source schema type '{sourceSchemaClassName}': {errorMessage}");
-                }
-
-                File.WriteAllText(tempInputFlatFileFilename, inputFlatFileContents);
-
-                if (!sourceSchemaTree.ValidateInstance(tempInputFlatFileFilename, OutputInstanceType.Native, sourceSchemaClassName, out validationErrors, out convertedXml))
-                {
-                    var messages = validationErrors.Select(e => $"Line:{e.LineNumber} Position:{e.LinePosition} {(e.IsWarning ? "Warning: " : "Error: ")} {e.ErrorInfo}");
-                    var message = string.Join(". " + Environment.NewLine, messages);
-                    throw new BizTalkTestAssertFailException($"An error occurred while parsing/converting the contents of the flat file to XML: {Environment.NewLine}{message}");
-                }
-            }
-            finally
-            {
-                if (File.Exists(tempInputFlatFileFilename))
-                {
-                    File.Delete(tempInputFlatFileFilename);
-                }
-            }
-
-            return XElement.Parse(convertedXml);
-        }
-
-        private static CMapperSchemaTree CreateSchemaTree(TransformBase map)
-        {
-            var schemaLoader = new BizTalkMapSchemaLoader(map);
-            var schemaResolveHandler = new SchemaResolver();
-            schemaResolveHandler.CustomResolution(schemaLoader);
-
-            var schemaTree = new CMapperSchemaTree();
-            schemaTree.SetSchemaResolveHandler(schemaResolveHandler);
-
-            return schemaTree;
-        }
-
-        private bool DoesMapOutputXml(TransformBase map)
-        {
-            string errorMessage = null;
-
-            CMapperSchemaTree targetSchemaTree = CreateSchemaTree(map);
-
-            string targetSchemaClassName = map.TargetSchemas[0];
-            if (!targetSchemaTree.LoadFromDotNetPath(targetSchemaClassName, null, out errorMessage))
-            {
-                throw new BizTalkTestAssertFailException($"An error occurred while loading the target schema type '{targetSchemaClassName}': {errorMessage}");
-            }
-
-            return targetSchemaTree.IsStandardXML;
         }
 
         #endregion

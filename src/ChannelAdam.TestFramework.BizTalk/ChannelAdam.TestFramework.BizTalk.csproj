@@ -74,10 +74,12 @@
     <Compile Include="BizTalkFlatFileToFlatFileMapTester.cs" />
     <Compile Include="BizTalkOperationsHelper.cs" />
     <Compile Include="BizTalkFlatFileToXmlMapTester.cs" />
+    <Compile Include="Helpers\BizTalkMapSchemaUtility.cs" />
+    <Compile Include="Helpers\BizTalkXmlFlatFileAdapter.cs" />
     <Compile Include="Helpers\BizTalkXmlMapTestValidator.cs" />
-    <Compile Include="Helpers\BizTalkXmlMapTestExecutor.cs" />
+    <Compile Include="Helpers\BizTalkXmlMapExecutor.cs" />
     <Compile Include="BizTalkXmlMapTester.cs" />
-    <Compile Include="Helpers\BizTalkMapSchemaLoader.cs" />
+    <Compile Include="Helpers\BizTalkMapSchemaArtifactLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

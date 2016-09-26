@@ -72,7 +72,7 @@ namespace ChannelAdam.TestFramework.BizTalk
             }
 
             this.logger.Log("Executing the map " + map.GetType().Name);
-            string outputXml = BizTalkXmlMapTestExecutor.PerformTransform(map, this.InputXml);
+            string outputXml = BizTalkXmlMapExecutor.PerformTransform(map, this.InputXml);
             this.logAssert.IsTrue("There was output from the map", !string.IsNullOrWhiteSpace(outputXml));
 
             base.SetActualOutputXmlFromXmlString(outputXml);
@@ -81,7 +81,7 @@ namespace ChannelAdam.TestFramework.BizTalk
 
             if (validateOutputXml)
             {
-                BizTalkXmlMapTestValidator.ValidateActualOutputXml(map, this.ActualOutputXml, this.Logger);
+                BizTalkXmlMapTestValidator.ValidateOutputXml(map, this.ActualOutputXml, this.Logger);
             }
         }
 
