@@ -38,9 +38,12 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
         /// <returns>The resulting XML output from the map.</returns>
         public static string PerformTransform(TransformBase map, XNode inputXml)
         {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+            if (inputXml == null) throw new ArgumentNullException(nameof(inputXml));
+
             try
             {
-                XslCompiledTransform transform = LoadStylesheetFromMap(map);
+                XslCompiledTransform transform = BizTalkMapSchemaUtility.LoadStylesheetFromMap(map);
 
                 using (var input = XmlReader.Create(new StringReader(inputXml.ToString())))
                 {
@@ -70,19 +73,8 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
                     currentException = currentException.InnerException;
                 }
 
-                throw new ApplicationException(sb.ToString());
+                throw new InvalidDataException(sb.ToString());
             }
-        }
-
-        private static XslCompiledTransform LoadStylesheetFromMap(TransformBase map)
-        {
-            var transform = new XslCompiledTransform();
-            using (var stylesheet = new XmlTextReader(new StringReader(map.XmlContent)))
-            {
-                transform.Load(stylesheet, new XsltSettings(true, true), null);
-            }
-
-            return transform;
         }
 
         #endregion

@@ -20,6 +20,7 @@ namespace ChannelAdam.TestFramework.BizTalk
     using System.Linq;
 
     using Microsoft.BizTalk.ExplorerOM;
+    using System;
 
     public static class BizTalkOperationsHelper
     {
@@ -35,11 +36,15 @@ namespace ChannelAdam.TestFramework.BizTalk
 
         public static Application GetBizTalkApplication(string applicationName, BtsCatalogExplorer explorer)
         {
+            if (explorer == null) throw new ArgumentNullException(nameof(explorer));
+
             return explorer.Applications[applicationName];
         }
 
         public static Application GetBizTalkApplicationContainingOrchestration(string orchestrationFullName, BtsCatalogExplorer explorer)
         {
+            if (explorer == null) throw new ArgumentNullException(nameof(explorer));
+
             return explorer.Applications.Cast<Application>().SingleOrDefault(app => app.Orchestrations.Cast<BtsOrchestration>().Any(orch => orch.FullName == orchestrationFullName));
         }
     }

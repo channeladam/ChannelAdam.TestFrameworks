@@ -36,19 +36,27 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
         public static void ValidateInputXml(TransformBase map, XNode inputXml, ISimpleLogger logger)
         {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+            if (inputXml == null) throw new ArgumentNullException(nameof(inputXml));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+
             logger.Log("Validating the input XML");
             ValidateXml(inputXml.ToString(), map.SourceSchemas, BizTalkMapSchemaUtility.GetSchemaReferenceAttributes(map));
         }
 
         public static void ValidateOutputXml(TransformBase map, XNode outputXml, ISimpleLogger logger)
         {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+            if (outputXml == null) throw new ArgumentNullException(nameof(outputXml));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+
             logger.Log("Validating the output XML");
             ValidateXml(outputXml.ToString(), map.TargetSchemas, BizTalkMapSchemaUtility.GetSchemaReferenceAttributes(map));
         }
 
         public static void ValidateXml(string xmlToValidate, IEnumerable<string> schemas, IEnumerable<SchemaReferenceAttribute> schemaReferenceAttributes)
         {
-            var validationErrors = string.Empty;
+            if (schemas == null) throw new ArgumentNullException(nameof(schemas));
 
             var schemaSet = new XmlSchemaSet();
             foreach (var schema in schemas)
@@ -60,7 +68,6 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
             xmlValidator.ValidateXml(xmlToValidate, schemaSet);
         }
 
-
         /// <summary>
         /// Validates the given flat file contents.
         /// </summary>
@@ -69,7 +76,7 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
         /// <param name="schemaClassName">The name of the schema class.</param>
         /// <returns>The flat file contents converted to XML.</returns>
         /// <exception cref="ApplicationException">When there is a validation error.</exception>
-        public static string ValidateFlatFileContents(string flatFileContents, CMapperSchemaTree schemaTreeWithLoadedSchema, string schemaClassName)
+        public static string ValidateFlatFileContents(string flatFileContents, CXSDSchemaTree schemaTreeWithLoadedSchema, string schemaClassName)
         {
             var tempFlatFileFilename = Path.GetTempFileName();
 
@@ -96,8 +103,10 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
         /// <param name="schemaClassName">The name of the schema class.</param>
         /// <returns>The flat file contents converted to XML.</returns>
         /// <exception cref="ApplicationException">When there is a validation error.</exception>
-        public static string ValidateFlatFile(string flatFileFilename, CMapperSchemaTree schemaTreeWithLoadedSchema, string schemaClassName)
+        public static string ValidateFlatFile(string flatFileFilename, CXSDSchemaTree schemaTreeWithLoadedSchema, string schemaClassName)
         {
+            if (schemaTreeWithLoadedSchema == null) throw new ArgumentNullException(nameof(schemaTreeWithLoadedSchema));
+
             ITOMErrorInfo[] validationErrors = null;
             string xmlOutput = null;
 
@@ -105,7 +114,7 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
             {
                 var messages = validationErrors.Select(e => $"Line:{e.LineNumber} Position:{e.LinePosition} {(e.IsWarning ? "Warning: " : "Error: ")} {e.ErrorInfo}");
                 var message = string.Join(". " + Environment.NewLine, messages);
-                throw new ApplicationException($"An error occurred while parsing/validating the contents of the flat file, or converting it to XML: {Environment.NewLine}{message}");
+                throw new InvalidDataException($"An error occurred while parsing/validating the contents of the flat file, or converting it to XML: {Environment.NewLine}{message}");
             }
 
             return xmlOutput;

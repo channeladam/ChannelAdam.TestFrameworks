@@ -93,7 +93,9 @@ namespace ChannelAdam.TestFramework.BizTalk
         /// <param name="validateOutput">if set to <c>true</c> then the output is validated.</param>
         public void TestMap(TransformBase map, bool validateInput, bool validateOutput)
         {
-            XNode inputXml = BizTalkXmlFlatFileAdapter.ConvertInputFlatFileContentsToXml(map, this.InputFlatFileContents);
+            if (map == null) throw new ArgumentNullException(nameof(map));
+
+            XNode inputXml = BizTalkXmlFlatFileAdapter.ConvertInputFlatFileContentsToInputXml(map, this.InputFlatFileContents);
 
             if (validateInput)
             {
@@ -116,7 +118,7 @@ namespace ChannelAdam.TestFramework.BizTalk
             var schemaTree = BizTalkMapSchemaUtility.CreateSchemaTreeAndLoadSchema(map, map.TargetSchemas[0]);
             if (!schemaTree.IsStandardXML)
             {
-                this.ActualOutputFlatFileContents = BizTalkXmlFlatFileAdapter.ConvertOutputXmlToFlatFileContents(map, this.ActualOutputXml, validateOutput);
+                this.ActualOutputFlatFileContents = BizTalkXmlFlatFileAdapter.ConvertOutputXmlToOutputFlatFileContents(map, this.ActualOutputXml, validateOutput);
                 this.Logger.Log();
                 this.Logger.Log($"The actual output flat file contents from the map is: {Environment.NewLine}{this.ActualOutputFlatFileContents}");
             }

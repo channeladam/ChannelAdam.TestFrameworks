@@ -26,7 +26,7 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
     {
         #region Private Fields
 
-        private Type mapperType;
+        private readonly Type mapperType;
 
         #endregion Private Fields
 
@@ -34,6 +34,8 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
         public BizTalkMapSchemaArtifactLoader(TransformBase map)
         {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+
             this.mapperType = map.GetType();
         }
 
@@ -41,11 +43,16 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
         #region Public Methods
 
-        public string GetSchemaFromLoadPath(string schemaTypeNameToLoad)
+        /// <summary>
+        /// Load a schema from the assembly containing the map.
+        /// </summary>
+        /// <param name="strLoadPath">This is the schema type name to load.</param>
+        /// <returns></returns>
+        public string GetSchemaFromLoadPath(string strLoadPath)
         {
-            if (!string.IsNullOrWhiteSpace(schemaTypeNameToLoad))
+            if (!string.IsNullOrWhiteSpace(strLoadPath))
             {
-                Type schemaType = BizTalkMapSchemaUtility.FindSchemaViaAssembly(schemaTypeNameToLoad, this.mapperType.Assembly);
+                Type schemaType = BizTalkMapSchemaUtility.FindSchemaViaAssembly(strLoadPath, this.mapperType.Assembly);
                 if (schemaType != null)
                 {
                     return BizTalkMapSchemaUtility.LoadSchemaBase(schemaType).XmlContent;

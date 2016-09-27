@@ -27,8 +27,12 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
     public static class BizTalkXmlFlatFileAdapter
     {
-        public static XNode ConvertInputFlatFileContentsToXml(TransformBase map, string inputFlatFileContents)
+        #region Public Methods
+
+        public static XNode ConvertInputFlatFileContentsToInputXml(TransformBase map, string inputFlatFileContents)
         {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+
             string sourceSchemaClassName = map.SourceSchemas[0];
             CMapperSchemaTree sourceSchemaTree = BizTalkMapSchemaUtility.CreateSchemaTreeAndLoadSchema(map, sourceSchemaClassName);
             string convertedXml = BizTalkXmlMapTestValidator.ValidateFlatFileContents(inputFlatFileContents, sourceSchemaTree, sourceSchemaClassName);
@@ -36,13 +40,11 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
             return XElement.Parse(convertedXml);
         }
 
-        public static string ConvertOutputXmlToFlatFileContents(TransformBase map, XNode outputXml, bool validateFlatFile)
+        public static string ConvertOutputXmlToOutputFlatFileContents(TransformBase map, XNode outputXml, bool validateFlatFile)
         {
-            string flatFileContentsResult = null;
-            ITOMErrorInfo[] creationErrors = null;
+            if (outputXml == null) throw new ArgumentNullException(nameof(outputXml));
 
-            string targetSchemaClassName = map.TargetSchemas[0];
-            CMapperSchemaTree targetSchemaTree = BizTalkMapSchemaUtility.CreateSchemaTreeAndLoadSchema(map, targetSchemaClassName);
+            string flatFileContentsResult = null;
 
             var tempXmlFilename = Path.GetTempFileName();
             var tempFlatFileFilename = Path.GetTempFileName();
@@ -51,17 +53,7 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
             {
                 File.WriteAllText(tempXmlFilename, outputXml.ToString());
 
-                if (!targetSchemaTree.CreateNativeInstanceFromXMLInstance(tempXmlFilename, tempFlatFileFilename, out creationErrors))
-                {
-                    var messages = creationErrors.Select(e => $"Line:{e.LineNumber} Position:{e.LinePosition} {(e.IsWarning ? "Warning: " : "Error: ")} {e.ErrorInfo}");
-                    var message = string.Join(". " + Environment.NewLine, messages);
-                    throw new ApplicationException($"An error occurred while converting from XML to a flat file format: {Environment.NewLine}{message}");
-                }
-
-                if (validateFlatFile)
-                {
-                    BizTalkXmlMapTestValidator.ValidateFlatFile(tempFlatFileFilename, targetSchemaTree, targetSchemaClassName);
-                }
+                ConvertOutputXmlFileToOutputFlatFile(map, tempXmlFilename, tempFlatFileFilename, validateFlatFile);
 
                 flatFileContentsResult = File.ReadAllText(tempFlatFileFilename);
             }
@@ -80,5 +72,29 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
             return flatFileContentsResult;
         }
+
+        public static void ConvertOutputXmlFileToOutputFlatFile(TransformBase map, string outputXmlFilename, string outputFlatFileFilename, bool validateFlatFile)
+        {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+
+            ITOMErrorInfo[] creationErrors = null;
+
+            string targetSchemaClassName = map.TargetSchemas[0];
+            CMapperSchemaTree targetSchemaTree = BizTalkMapSchemaUtility.CreateSchemaTreeAndLoadSchema(map, targetSchemaClassName);
+
+            if (!targetSchemaTree.CreateNativeInstanceFromXMLInstance(outputXmlFilename, outputFlatFileFilename, out creationErrors))
+            {
+                var messages = creationErrors.Select(e => $"Line:{e.LineNumber} Position:{e.LinePosition} {(e.IsWarning ? "Warning: " : "Error: ")} {e.ErrorInfo}");
+                var message = string.Join(". " + Environment.NewLine, messages);
+                throw new InvalidDataException($"An error occurred while converting from XML to a flat file format: {Environment.NewLine}{message}");
+            }
+
+            if (validateFlatFile)
+            {
+                BizTalkXmlMapTestValidator.ValidateFlatFile(outputFlatFileFilename, targetSchemaTree, targetSchemaClassName);
+            }
+        }
+
+        #endregion Public Methods
     }
 }

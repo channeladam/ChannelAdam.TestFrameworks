@@ -25,71 +25,30 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
     using Microsoft.BizTalk.TOM;
     using Microsoft.XLANGs.BaseTypes;
+    using System.Xml.Xsl;
+    using System.Xml;
+    using System.IO;
 
     public static class BizTalkMapSchemaUtility
     {
-        public static IEnumerable<SchemaReferenceAttribute> GetSchemaReferenceAttributes(TransformBase map)
+        #region Public Methods
+
+        public static XslCompiledTransform LoadStylesheetFromMap(TransformBase map)
         {
-            return map.GetType().GetCustomAttributes(typeof(Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute), false)
-                .Cast<Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute>();
+            return LoadStylesheetFromMap(map, null);
         }
 
-        public static XmlSchema LoadSchema(string schemaName, IEnumerable<SchemaReferenceAttribute> schemaReferenceAttributes)
+        public static XslCompiledTransform LoadStylesheetFromMap(TransformBase map, XmlResolver stylesheetResolver)
         {
-            Type schemaType = schemaReferenceAttributes.First(a => a.Reference == schemaName).Type;
-            var schemaBase = LoadSchemaBase(schemaType);
+            if (map == null) throw new ArgumentNullException(nameof(map));
 
-            return schemaBase.Schema;
-        }
-
-        public static XmlSchema LoadSchema(Type schemaType)
-        {
-            var schemaBase = LoadSchemaBase(schemaType);
-
-            return schemaBase.Schema;
-        }
-
-        public static SchemaBase LoadSchemaBase(Type schemaType)
-        {
-            var schemaBase = Activator.CreateInstance(schemaType) as SchemaBase;
-
-            if (schemaBase == null)
+            var transform = new XslCompiledTransform();
+            using (var stylesheet = new XmlTextReader(new StringReader(map.XmlContent)))
             {
-                throw new ApplicationException($"Could not cast schema from Type '{schemaType.Name}' to Type SchemaBase");
+                transform.Load(stylesheet, new XsltSettings(true, true), stylesheetResolver);
             }
 
-            return schemaBase;
-        }
-
-        public static Type FindSchemaViaAssembly(string schemaTypeNameToLoad, Assembly assembly)
-        {
-            Type schemaType = assembly.GetType(schemaTypeNameToLoad);
-            if (schemaType == null)
-            {
-                schemaType = FindSchemaInReferencedAssemblies(schemaTypeNameToLoad, assembly);
-            }
-
-            return schemaType;
-        }
-
-        public static Type FindSchemaInReferencedAssemblies(string schemaTypeNameToLoad, Assembly assembly)
-        {
-            Type schemaType = null;
-
-            foreach (AssemblyName referencedAssemblyName in assembly.GetReferencedAssemblies())
-            {
-                Assembly referencedAssembly = AppDomain.CurrentDomain.Load(referencedAssemblyName);
-                if (referencedAssembly != null)
-                {
-                    schemaType = referencedAssembly.GetType(schemaTypeNameToLoad);
-                    if (schemaType != null)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            return schemaType;
+            return transform;
         }
 
         public static CMapperSchemaTree CreateSchemaTree(TransformBase map)
@@ -112,10 +71,84 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
             if (!schemaTree.LoadFromDotNetPath(schemaClassName, null, out errorMessage))
             {
-                throw new ApplicationException($"An error occurred while loading the schema type '{schemaClassName}': {errorMessage}");
+                throw new TypeLoadException($"An error occurred while loading the schema type '{schemaClassName}': {errorMessage}");
             }
 
             return schemaTree;
         }
+
+        public static Type FindSchemaInReferencedAssemblies(string schemaTypeNameToLoad, Assembly assembly)
+        {
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+
+            Type schemaType = null;
+
+            foreach (AssemblyName referencedAssemblyName in assembly.GetReferencedAssemblies())
+            {
+                Assembly referencedAssembly = AppDomain.CurrentDomain.Load(referencedAssemblyName);
+                if (referencedAssembly != null)
+                {
+                    schemaType = referencedAssembly.GetType(schemaTypeNameToLoad);
+                    if (schemaType != null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return schemaType;
+        }
+
+        public static Type FindSchemaViaAssembly(string schemaTypeNameToLoad, Assembly assembly)
+        {
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+
+            Type schemaType = assembly.GetType(schemaTypeNameToLoad);
+            if (schemaType == null)
+            {
+                schemaType = FindSchemaInReferencedAssemblies(schemaTypeNameToLoad, assembly);
+            }
+
+            return schemaType;
+        }
+
+        public static IEnumerable<SchemaReferenceAttribute> GetSchemaReferenceAttributes(TransformBase map)
+        {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+
+            return map.GetType().GetCustomAttributes(typeof(Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute), false)
+                .Cast<Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute>();
+        }
+
+        public static XmlSchema LoadSchema(string schemaName, IEnumerable<SchemaReferenceAttribute> schemaReferenceAttributes)
+        {
+            Type schemaType = schemaReferenceAttributes.First(a => a.Reference == schemaName).Type;
+            var schemaBase = LoadSchemaBase(schemaType);
+
+            return schemaBase.Schema;
+        }
+
+        public static XmlSchema LoadSchema(Type schemaType)
+        {
+            var schemaBase = LoadSchemaBase(schemaType);
+
+            return schemaBase.Schema;
+        }
+
+        public static SchemaBase LoadSchemaBase(Type schemaType)
+        {
+            if (schemaType == null) throw new ArgumentNullException(nameof(schemaType));
+
+            var schemaBase = Activator.CreateInstance(schemaType) as SchemaBase;
+
+            if (schemaBase == null)
+            {
+                throw new ArgumentException($"Could not cast schema from Type '{schemaType.Name}' to Type SchemaBase");
+            }
+
+            return schemaBase;
+        }
+
+        #endregion Public Methods
     }
 }

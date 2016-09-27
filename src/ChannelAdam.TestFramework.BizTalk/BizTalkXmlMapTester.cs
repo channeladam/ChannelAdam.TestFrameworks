@@ -23,13 +23,14 @@ namespace ChannelAdam.TestFramework.BizTalk
     using Helpers;
 
     using Microsoft.XLANGs.BaseTypes;
+    using System;
 
     public class BizTalkXmlMapTester : XmlMapTester
     {
         #region Fields
 
-        private ISimpleLogger logger;
-        private ILogAsserter logAssert;
+        private readonly ISimpleLogger logger;
+        private readonly ILogAsserter logAssert;
 
         #endregion
 
@@ -66,6 +67,8 @@ namespace ChannelAdam.TestFramework.BizTalk
         /// <param name="validateOutputXml">if set to <c>true</c> then the output XML is validated.</param>
         public void TestMap(TransformBase map, bool validateInputXml, bool validateOutputXml)
         {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+
             if (validateInputXml)
             {
                 BizTalkXmlMapTestValidator.ValidateInputXml(map, this.InputXml, this.Logger);
@@ -73,7 +76,7 @@ namespace ChannelAdam.TestFramework.BizTalk
 
             this.logger.Log("Executing the map " + map.GetType().Name);
             string outputXml = BizTalkXmlMapExecutor.PerformTransform(map, this.InputXml);
-            this.logAssert.IsTrue("There was output from the map", !string.IsNullOrWhiteSpace(outputXml));
+            this.logAssert.IsTrue("The map produced some output", !string.IsNullOrWhiteSpace(outputXml));
 
             base.SetActualOutputXmlFromXmlString(outputXml);
             this.logger.Log();
