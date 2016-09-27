@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="XmlMapTester.cs">
+// <copyright file="MappingFromXmlToXmlTester.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -15,26 +15,27 @@
 // limitations under the License.
 //-----------------------------------------------------------------------
 
-namespace ChannelAdam.TestFramework.Xml
+namespace ChannelAdam.TestFramework.Mapping
 {
     using System;
     using System.Reflection;
     using System.Xml.Linq;
     using System.Xml.Serialization;
 
+    using Abstractions;
     using ChannelAdam.Logging;
     using ChannelAdam.Reflection;
     using ChannelAdam.Xml;
 
-    public class XmlMapTester : XmlMapTesterBase
+    public class MappingFromXmlToXmlTester : MappingToXmlTesterBase, IHasInputXml
     {
         #region Constructor / Destructor
 
-        protected XmlMapTester(ILogAsserter logAsserter) : base(logAsserter)
+        protected MappingFromXmlToXmlTester(ILogAsserter logAsserter) : base(logAsserter)
         {
         }
 
-        protected XmlMapTester(ISimpleLogger logger, ILogAsserter logAsserter) : base(logger, logAsserter)
+        protected MappingFromXmlToXmlTester(ISimpleLogger logger, ILogAsserter logAsserter) : base(logger, logAsserter)
         {
         }
 

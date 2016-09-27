@@ -65,18 +65,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mapping\Abstractions\IHasActualOutputXml.cs" />
+    <Compile Include="Mapping\Abstractions\IHasExpectedOutputFlatFileContents.cs" />
+    <Compile Include="Mapping\Abstractions\IHasInputFlatFileContents.cs" />
     <Compile Include="ExpectedExceptionDescriptor.cs" />
     <Compile Include="ILogAsserter.cs" />
+    <Compile Include="Mapping\MappingFromFlatFileToXmlTester.cs" />
     <Compile Include="MoqTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestEasy.cs" />
     <Compile Include="Xml\Abstractions\IXmlFilter.cs" />
     <Compile Include="Xml\IgnoreElementTagNameDifferenceEvaluator.cs" />
+    <Compile Include="Mapping\Abstractions\IHasExpectedOutputXml.cs" />
+    <Compile Include="Mapping\Abstractions\IHasActualOutputFlatFileContents.cs" />
+    <Compile Include="Mapping\Abstractions\IHasInputXml.cs" />
     <Compile Include="Xml\XmlAsserter.cs" />
     <Compile Include="Xml\XmlChangedEventArgs.cs" />
     <Compile Include="Xml\XmlFilter.cs" />
-    <Compile Include="Xml\XmlMapTesterBase.cs" />
-    <Compile Include="Xml\XmlMapTester.cs" />
+    <Compile Include="Mapping\MappingToXmlTesterBase.cs" />
+    <Compile Include="Mapping\MappingFromXmlToXmlTester.cs" />
     <Compile Include="Xml\XmlTester.cs" />
   </ItemGroup>
   <ItemGroup>

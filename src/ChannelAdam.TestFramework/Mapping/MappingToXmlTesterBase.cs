@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="XmlMapTesterBase.cs">
+// <copyright file="MappingToXmlTesterBase.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -15,7 +15,7 @@
 // limitations under the License.
 //-----------------------------------------------------------------------
 
-namespace ChannelAdam.TestFramework.Xml
+namespace ChannelAdam.TestFramework.Mapping
 {
     using System;
     using System.IO;
@@ -25,8 +25,10 @@ namespace ChannelAdam.TestFramework.Xml
 
     using Abstractions;
     using ChannelAdam.Logging;
+    using Xml;
+    using Xml.Abstractions;
 
-    public abstract class XmlMapTesterBase
+    public abstract class MappingToXmlTesterBase : IHasExpectedOutputXml, IHasActualOutputXml
     {
         #region Fields
 
@@ -36,11 +38,11 @@ namespace ChannelAdam.TestFramework.Xml
 
         #region Constructor / Destructor
 
-        protected XmlMapTesterBase(ILogAsserter logAsserter) : this(new SimpleConsoleLogger(), logAsserter)
+        protected MappingToXmlTesterBase(ILogAsserter logAsserter) : this(new SimpleConsoleLogger(), logAsserter)
         {
         }
 
-        protected XmlMapTesterBase(ISimpleLogger logger, ILogAsserter logAsserter)
+        protected MappingToXmlTesterBase(ISimpleLogger logger, ILogAsserter logAsserter)
         {
             this.Logger = logger;
             this.LogAssert = logAsserter;
@@ -49,7 +51,7 @@ namespace ChannelAdam.TestFramework.Xml
             this.xmlTester.ExpectedXmlChangedEvent += this.XmlTester_ExpectedXmlChangedEvent;
         }
 
-        ~XmlMapTesterBase()
+        ~MappingToXmlTesterBase()
         {
             this.xmlTester.ActualXmlChangedEvent -= this.XmlTester_ActualXmlChangedEvent;
             this.xmlTester.ExpectedXmlChangedEvent -= this.XmlTester_ExpectedXmlChangedEvent;
