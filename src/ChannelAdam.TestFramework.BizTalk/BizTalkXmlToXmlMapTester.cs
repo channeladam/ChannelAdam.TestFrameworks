@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BizTalkXmlMapTester.cs">
+// <copyright file="BizTalkXmlToXmlMapTester.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -17,15 +17,14 @@
 
 namespace ChannelAdam.TestFramework.BizTalk
 {
-    using ChannelAdam.Logging;
-    using ChannelAdam.TestFramework.Xml;
-
-    using Helpers;
-
-    using Microsoft.XLANGs.BaseTypes;
     using System;
 
-    public class BizTalkXmlMapTester : XmlMapTester
+    using ChannelAdam.Logging;
+    using Helpers;
+    using Mapping;
+    using Microsoft.XLANGs.BaseTypes;
+
+    public class BizTalkXmlToXmlMapTester : MappingFromXmlToXmlTester
     {
         #region Fields
 
@@ -36,11 +35,11 @@ namespace ChannelAdam.TestFramework.BizTalk
 
         #region Constructors
 
-        public BizTalkXmlMapTester(ILogAsserter logAsserter) : this(new SimpleConsoleLogger(), logAsserter)
+        public BizTalkXmlToXmlMapTester(ILogAsserter logAsserter) : this(new SimpleConsoleLogger(), logAsserter)
         {
         }
 
-        public BizTalkXmlMapTester(ISimpleLogger logger, ILogAsserter logAsserter) : base(logger, logAsserter)
+        public BizTalkXmlToXmlMapTester(ISimpleLogger logger, ILogAsserter logAsserter) : base(logger, logAsserter)
         {
             this.logger = logger;
             this.logAssert = logAsserter;
@@ -77,10 +76,10 @@ namespace ChannelAdam.TestFramework.BizTalk
             this.logger.Log("Executing the map " + map.GetType().Name);
             string outputXml = BizTalkXmlMapExecutor.PerformTransform(map, this.InputXml);
             this.logAssert.IsTrue("The map produced some output", !string.IsNullOrWhiteSpace(outputXml));
-
-            base.SetActualOutputXmlFromXmlString(outputXml);
             this.logger.Log();
             this.logger.Log("Map completed");
+
+            base.SetActualOutputXmlFromXmlString(outputXml);
 
             if (validateOutputXml)
             {

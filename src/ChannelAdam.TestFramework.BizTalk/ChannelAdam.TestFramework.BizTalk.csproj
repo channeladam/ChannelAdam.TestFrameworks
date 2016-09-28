@@ -40,11 +40,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ChannelAdam.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5cc5a4db964eb79, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChannelAdam.Core.1.4.1\lib\net40\ChannelAdam.Core.dll</HintPath>
+      <HintPath>..\packages\ChannelAdam.Core.1.4.2\lib\net40\ChannelAdam.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ChannelAdam.TestFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9fcb9bb550152cab, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChannelAdam.TestFramework.1.5.4\lib\net40\ChannelAdam.TestFramework.dll</HintPath>
+      <HintPath>..\packages\ChannelAdam.TestFramework.1.6.0\lib\net40\ChannelAdam.TestFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DiffPlex, Version=1.2.0.0, Culture=neutral, PublicKeyToken=1d35e91d1bd7bc0f, processorArchitecture=MSIL">
+      <HintPath>..\packages\DiffPlex.1.2.1\lib\portable-net40+sl50+win+wpa81+wp80\DiffPlex.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.BizTalk.ExplorerOM">
@@ -79,6 +83,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BizTalkXmlToFlatFileMapTester.cs" />
     <Compile Include="BizTalkFlatFileToFlatFileMapTester.cs" />
     <Compile Include="BizTalkOperationsHelper.cs" />
     <Compile Include="BizTalkFlatFileToXmlMapTester.cs" />
@@ -86,7 +91,7 @@
     <Compile Include="Helpers\BizTalkXmlFlatFileAdapter.cs" />
     <Compile Include="Helpers\BizTalkXmlMapTestValidator.cs" />
     <Compile Include="Helpers\BizTalkXmlMapExecutor.cs" />
-    <Compile Include="BizTalkXmlMapTester.cs" />
+    <Compile Include="BizTalkXmlToXmlMapTester.cs" />
     <Compile Include="Helpers\BizTalkMapSchemaArtifactLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

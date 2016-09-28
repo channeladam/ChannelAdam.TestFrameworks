@@ -21,13 +21,13 @@ namespace ChannelAdam.TestFramework.BizTalk
     using System.Reflection;
     using System.Xml.Linq;
 
-    using ChannelAdam.TestFramework.Xml;
     using Helpers;
     using Logging;
+    using Mapping;
     using Microsoft.XLANGs.BaseTypes;
     using Reflection;
 
-    public class BizTalkFlatFileToXmlMapTester : XmlMapTesterBase
+    public class BizTalkFlatFileToXmlMapTester : MappingFromFlatFileToXmlTester
     {
         #region Constructors
 
@@ -41,38 +41,7 @@ namespace ChannelAdam.TestFramework.BizTalk
 
         #endregion
 
-        #region Properties
-
-        public string InputFlatFileContents { get; private set; }
-
-        #endregion
-
         #region Public Methods
-
-        #region Arrange Input
-
-        /// <summary>
-        /// Arrange the input flat file from an embedded resource in the given assembly.
-        /// </summary>
-        /// <param name="assembly">The assembly that contains the resource.</param>
-        /// <param name="resourceName">The name of the resource.</param>
-        public void ArrangeInputFlatFile(Assembly assembly, string resourceName)
-        {
-            this.ArrangeInputFlatFile(EmbeddedResource.GetAsString(assembly, resourceName));
-        }
-
-        /// <summary>
-        /// Arrange the input flat file from the given string.
-        /// </summary>
-        /// <param name="value">The string to use as input.</param>
-        public void ArrangeInputFlatFile(string value)
-        {
-            Logger.Log();
-            Logger.Log($"The input flat file contents for the map is: {Environment.NewLine}{value}");
-            this.InputFlatFileContents = value;
-        }
-
-        #endregion Arrange Input
 
         /// <summary>
         /// Tests the map and performs validation on both the input and output XML.
@@ -103,10 +72,10 @@ namespace ChannelAdam.TestFramework.BizTalk
             Logger.Log("Executing the map " + map.GetType().Name);
             string outputXml = BizTalkXmlMapExecutor.PerformTransform(map, inputXml);
             LogAssert.IsTrue("There was output from the map", !string.IsNullOrWhiteSpace(outputXml));
-
-            base.SetActualOutputXmlFromXmlString(outputXml);
             Logger.Log();
             Logger.Log("Map completed");
+
+            base.SetActualOutputXmlFromXmlString(outputXml);
 
             if (validateOutput)
             {

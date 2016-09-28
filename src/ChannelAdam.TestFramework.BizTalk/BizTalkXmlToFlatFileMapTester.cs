@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BizTalkFlatFileToFlatFileMapTester.cs">
+// <copyright file="BizTalkXmlToFlatFileMapTester.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -25,15 +25,15 @@ namespace ChannelAdam.TestFramework.BizTalk
     using Mapping;
     using Microsoft.XLANGs.BaseTypes;
 
-    public class BizTalkFlatFileToFlatFileMapTester : MappingFromFlatFileToFlatFileTester
+    public class BizTalkXmlToFlatFileMapTester : MappingFromXmlToFlatFileTester
     {
         #region Constructors
 
-        public BizTalkFlatFileToFlatFileMapTester(ILogAsserter logAsserter) : base(logAsserter)
+        public BizTalkXmlToFlatFileMapTester(ILogAsserter logAsserter) : base(logAsserter)
         {
         }
 
-        public BizTalkFlatFileToFlatFileMapTester(ISimpleLogger logger, ILogAsserter logAsserter) : base(logger, logAsserter)
+        public BizTalkXmlToFlatFileMapTester(ISimpleLogger logger, ILogAsserter logAsserter) : base(logger, logAsserter)
         {
         }
 
@@ -54,21 +54,19 @@ namespace ChannelAdam.TestFramework.BizTalk
         /// Tests the map.
         /// </summary>
         /// <param name="map">The map to execute.</param>
-        /// <param name="validateInput">if set to <c>true</c> then the input flat file contents and converted XML is validated.</param>
+        /// <param name="validateInputXml">if set to <c>true</c> then the input XML is validated.</param>
         /// <param name="validateOutput">if set to <c>true</c> then the output is validated.</param>
-        public void TestMap(TransformBase map, bool validateInput, bool validateOutput)
+        public void TestMap(TransformBase map, bool validateInputXml, bool validateOutput)
         {
             if (map == null) throw new ArgumentNullException(nameof(map));
 
-            XNode inputXml = BizTalkXmlFlatFileAdapter.ConvertInputFlatFileContentsToInputXml(map, this.InputFlatFileContents);
-
-            if (validateInput)
+            if (validateInputXml)
             {
-                BizTalkXmlMapTestValidator.ValidateInputXml(map, inputXml, this.Logger);
+                BizTalkXmlMapTestValidator.ValidateInputXml(map, this.InputXml, this.Logger);
             }
 
             Logger.Log("Executing the map " + map.GetType().Name);
-            string outputXmlString = BizTalkXmlMapExecutor.PerformTransform(map, inputXml);
+            string outputXmlString = BizTalkXmlMapExecutor.PerformTransform(map, this.InputXml);
             LogAssert.IsTrue("There was output from the map", !string.IsNullOrWhiteSpace(outputXmlString));
             Logger.Log();
             Logger.Log("Map completed");
