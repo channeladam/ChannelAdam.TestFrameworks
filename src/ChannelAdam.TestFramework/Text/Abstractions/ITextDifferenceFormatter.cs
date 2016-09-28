@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="IHasActualOutputFlatFileContents.cs">
+// <copyright file="ITextDifferenceFormatter.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -15,16 +15,12 @@
 // limitations under the License.
 //-----------------------------------------------------------------------
 
-namespace ChannelAdam.TestFramework.Mapping.Abstractions
+namespace ChannelAdam.TestFramework.Text.Abstractions
 {
-    using System.Xml.Linq;
+    using DiffPlex.DiffBuilder.Model;
 
-    public interface IHasActualOutputFlatFileContents
+    public interface ITextDifferenceFormatter
     {
-        string ActualOutputFlatFileContents { get; }
-
-        void SetActualOutputFlatFileContentsFromFile(string fileName);
-
-        void SetActualOutputFlatFileContentsFromString(string flatFileContents);
+        string FormatDifferences(DiffPaneModel differences);
     }
 }

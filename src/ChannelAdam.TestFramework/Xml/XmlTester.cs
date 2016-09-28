@@ -116,10 +116,7 @@ namespace ChannelAdam.TestFramework.Xml
 
         public Diff Differences
         {
-            get
-            {
-                return this.differences;
-            }
+            get { return this.differences; }
         }
 
         #endregion

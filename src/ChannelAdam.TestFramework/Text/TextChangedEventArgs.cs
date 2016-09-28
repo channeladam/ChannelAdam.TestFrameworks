@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="IHasActualOutputFlatFileContents.cs">
+// <copyright file="TextChangedEventArgs.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -15,16 +15,17 @@
 // limitations under the License.
 //-----------------------------------------------------------------------
 
-namespace ChannelAdam.TestFramework.Mapping.Abstractions
+namespace ChannelAdam.TestFramework.Text
 {
-    using System.Xml.Linq;
+    using System;
 
-    public interface IHasActualOutputFlatFileContents
+    public class TextChangedEventArgs : EventArgs
     {
-        string ActualOutputFlatFileContents { get; }
+        public TextChangedEventArgs(string text)
+        {
+            this.Text = text;
+        }
 
-        void SetActualOutputFlatFileContentsFromFile(string fileName);
-
-        void SetActualOutputFlatFileContentsFromString(string flatFileContents);
+        public string Text { get; private set; }
     }
 }

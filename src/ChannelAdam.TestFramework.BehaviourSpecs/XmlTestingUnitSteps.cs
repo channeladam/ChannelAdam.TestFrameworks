@@ -5,6 +5,7 @@
     using ChannelAdam.TestFramework.Xml;
 
     [Binding]
+    [Scope(Feature = "XmlTesting")]
     public class XmlTestingUnitSteps : MoqTestFixture
     {
         #region Fields

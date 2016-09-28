@@ -12,4 +12,8 @@
     <Rule Id="CA1303" Action="None" />
     <Rule Id="CA1702" Action="None" />
   </Rules>
+  <Rules AnalyzerId="RefactoringEssentials" RuleNamespace="RefactoringEssentials">
+    <Rule Id="RECS0072" Action="None" />
+    <Rule Id="RECS0091" Action="None" />
+  </Rules>
 </RuleSet>
