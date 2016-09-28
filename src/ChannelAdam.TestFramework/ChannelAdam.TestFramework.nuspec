@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>A foundational automated testing library designed to make it easier to implement test cases and to read their output. Includes helpers for testing XML differences.</description>
     <releaseNotes>
-      1.6.0 - Bumped assembly version. Renamed Xml.XmlMapTesterBase to Mapping.MappingToXmlTesterBase. Renamed Xml.XmlMapTester to Mapping.MappingFromXmlToXmlTester. Added TextTester and flat file map testers.
+      1.6.0 - Corrected assembly version. Renamed Xml.XmlMapTesterBase to Mapping.MappingToXmlTesterBase. Renamed Xml.XmlMapTester to Mapping.MappingFromXmlToXmlTester. Added TextTester and flat file map testers.
       1.5.4 - Expose LogAssert in the XmlMapTesterBase.
       1.5.3 - Split XmlMapTester to have a reusable base class.
       1.5.2 - Updated to ChannelAdam.Core 1.4.0
@@ -30,7 +30,7 @@
     <copyright>Copyright 2014-2016 Adam Craven</copyright>
     <tags>Tests Unit Integration Moq XML Text Diff</tags>
     <dependencies>
-      <dependency id="ChannelAdam.Core" version="1.4.1" />
+      <dependency id="ChannelAdam.Core" version="1.4.2" />
       <dependency id="Moq" version="4.2.1510.2205" />
       <dependency id="XMLUnit.Core" version="2.2.0" />
       <dependency id="DiffPlex" version="1.2.1" />

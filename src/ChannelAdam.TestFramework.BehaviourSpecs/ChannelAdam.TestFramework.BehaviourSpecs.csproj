@@ -40,7 +40,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ChannelAdam.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5cc5a4db964eb79, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChannelAdam.Core.1.4.1\lib\net45\ChannelAdam.Core.dll</HintPath>
+      <HintPath>..\packages\ChannelAdam.Core.1.4.2\lib\net45\ChannelAdam.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ChannelAdam.TestFramework.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=16c0e755d7e669f9, processorArchitecture=MSIL">
