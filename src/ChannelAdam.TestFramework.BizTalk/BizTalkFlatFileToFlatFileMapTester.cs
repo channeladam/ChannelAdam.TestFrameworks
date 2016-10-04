@@ -88,8 +88,6 @@ namespace ChannelAdam.TestFramework.BizTalk
             else
             {
                 this.ActualOutputFlatFileContents = BizTalkXmlFlatFileAdapter.ConvertOutputXmlToOutputFlatFileContents(map, actualOutputXml, validateOutput);
-                this.Logger.Log();
-                this.Logger.Log($"The actual output flat file contents from the map is: {Environment.NewLine}{this.ActualOutputFlatFileContents}");
             }
         }
 

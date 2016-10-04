@@ -44,7 +44,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ChannelAdam.TestFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9fcb9bb550152cab, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChannelAdam.TestFramework.1.6.0\lib\net40\ChannelAdam.TestFramework.dll</HintPath>
+      <HintPath>..\packages\ChannelAdam.TestFramework.1.6.1\lib\net40\ChannelAdam.TestFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DiffPlex, Version=1.2.0.0, Culture=neutral, PublicKeyToken=1d35e91d1bd7bc0f, processorArchitecture=MSIL">
