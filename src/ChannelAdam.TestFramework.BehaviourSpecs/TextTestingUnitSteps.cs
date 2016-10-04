@@ -59,6 +59,21 @@ with a dry bottle of whiskey
 attached to its horn.");
         }
 
+        [Given(@"a delegate method exists to filter out the changes")]
+        public void GivenADelegateMethodExistsToFilterOutTheChanges()
+        {
+            this.textTester.TextDifferenceFilter = (diff) =>
+            {
+                OverrideDifferences(diff);
+            };
+        }
+
+        [Given(@"an event handler exists to filter out the changes")]
+        public void GivenAnEventHandlerExistsToFilterOutTheChanges()
+        {
+            this.textTester.TextDifferenceDetectedEvent += TextTester_TextDifferenceDetectedEvent;
+        }
+
         #endregion
 
         #region When
@@ -90,6 +105,25 @@ attached to its horn.");
             Try(() => this.textTester.AssertActualTextEqualsExpectedText());
 
             AssertExpectedException();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void OverrideDifferences(DiffPlex.DiffBuilder.Model.DiffPaneModel diff)
+        {
+            base.Logger.Log("Overriding changes so they do not appear as differences");
+
+            diff.Lines[1].Type =
+            diff.Lines[2].Type =
+            diff.Lines[4].Type =
+            diff.Lines[5].Type = DiffPlex.DiffBuilder.Model.ChangeType.Unchanged;
+        }
+
+        private void TextTester_TextDifferenceDetectedEvent(object sender, TextDifferenceDetectedEventArgs e)
+        {
+            OverrideDifferences(e.Differences);
         }
 
         #endregion

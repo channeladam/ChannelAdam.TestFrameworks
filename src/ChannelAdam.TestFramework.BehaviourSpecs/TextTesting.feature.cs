@@ -102,6 +102,50 @@ testRunner.Then("the two text samples are treated as different", ((string)(null)
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Should allow overriding of differences via a delegate method when two text sample" +
+            "s have different words")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "TextTesting")]
+        public virtual void ShouldAllowOverridingOfDifferencesViaADelegateMethodWhenTwoTextSamplesHaveDifferentWords()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Should allow overriding of differences via a delegate method when two text sample" +
+                    "s have different words", ((string[])(null)));
+#line 13
+this.ScenarioSetup(scenarioInfo);
+#line 14
+testRunner.Given("two text samples with the different words", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 15
+testRunner.And("a delegate method exists to filter out the changes", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 16
+testRunner.When("the two text samples are compared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 17
+testRunner.Then("the two text samples are treated as the same", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Should allow overriding of differences via an event when two text samples have di" +
+            "fferent words")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "TextTesting")]
+        public virtual void ShouldAllowOverridingOfDifferencesViaAnEventWhenTwoTextSamplesHaveDifferentWords()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Should allow overriding of differences via an event when two text samples have di" +
+                    "fferent words", ((string[])(null)));
+#line 19
+this.ScenarioSetup(scenarioInfo);
+#line 20
+testRunner.Given("two text samples with the different words", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 21
+testRunner.And("an event handler exists to filter out the changes", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 22
+testRunner.When("the two text samples are compared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 23
+testRunner.Then("the two text samples are treated as the same", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

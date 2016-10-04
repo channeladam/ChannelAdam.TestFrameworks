@@ -38,6 +38,14 @@ namespace ChannelAdam.TestFramework.Text
                 {
                     sb.Append("- ");
                 }
+                else if (line.Type == ChangeType.Modified)
+                {
+                    sb.Append("* ");
+                }
+                else if (line.Type == ChangeType.Imaginary)
+                {
+                    sb.Append("? ");
+                }
                 else
                 {
                     sb.Append("  ");

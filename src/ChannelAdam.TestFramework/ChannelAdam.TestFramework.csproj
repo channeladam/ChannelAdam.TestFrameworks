@@ -85,6 +85,7 @@
     <Compile Include="TestEasy.cs" />
     <Compile Include="Text\Abstractions\ITextDifferenceFormatter.cs" />
     <Compile Include="Text\DefaultTextDifferenceFormatter.cs" />
+    <Compile Include="Text\TextDifferenceDetectedEventArgs.cs" />
     <Compile Include="Text\TextTester.cs" />
     <Compile Include="Text\TextChangedEventArgs.cs" />
     <Compile Include="Xml\Abstractions\IXmlFilter.cs" />

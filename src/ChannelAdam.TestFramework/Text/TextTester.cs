@@ -78,6 +78,15 @@ namespace ChannelAdam.TestFramework
         /// </summary>
         public event EventHandler<TextChangedEventArgs> ExpectedTextChangedEvent;
 
+        /// <summary>
+        /// Occurs when a text difference is detected, allowing a listener to filter the differences and
+        /// change the Line[x].Type to ChangeType.UnChanged so that the difference is no longer treated as a difference.
+        /// </summary>
+        /// <remarks>
+        /// This event or the TextDifferenceFilter property can be used for this purpose.
+        /// </remarks>
+        public event EventHandler<TextDifferenceDetectedEventArgs> TextDifferenceDetectedEvent;
+
         #endregion
 
         #region Properties
@@ -114,6 +123,16 @@ namespace ChannelAdam.TestFramework
         {
             get { return this.differences; }
         }
+
+        /// <summary>
+        /// Gets or sets the Action delegate to be invoked when a text difference is detected, allowing differences to be filtered out by
+        /// changing the Line[x].Type to ChangeType.UnChanged - so that a difference is no longer treated as a difference.
+        /// </summary>
+        /// <value>The Action delegate.</value>
+        /// <remarks>
+        /// This property or TextDifferenceDetectedEvent can be used for this purpose.
+        /// </remarks>
+        public Action<DiffPaneModel> TextDifferenceFilter { get; set; }
 
         #endregion
 
@@ -218,7 +237,12 @@ namespace ChannelAdam.TestFramework
             var inlineBuilder = new InlineDiffBuilder(differ);
             this.differences = inlineBuilder.BuildDiffModel(expected, actual);
 
-            return this.differences.Lines.All(l => l.Type == ChangeType.Unchanged);
+            if (!AreAllLinesUnchanged(this.differences))
+            {
+                this.OnTextDifferenceDetected(this.differences);
+            }
+
+            return AreAllLinesUnchanged(this.differences);
         }
 
         #endregion
@@ -226,6 +250,12 @@ namespace ChannelAdam.TestFramework
         #endregion
 
         #region Protected Change Methods
+
+        protected virtual void OnTextDifferenceDetected(DiffPaneModel theDifferences)
+        {
+            this.TextDifferenceFilter?.Invoke(theDifferences);
+            this.TextDifferenceDetectedEvent?.Invoke(this, new TextDifferenceDetectedEventArgs(theDifferences));
+        }
 
         protected virtual void OnExpectedTextChanged(string value)
         {
@@ -235,6 +265,15 @@ namespace ChannelAdam.TestFramework
         protected virtual void OnActualTextChanged(string value)
         {
             this.ActualTextChangedEvent?.Invoke(this, new TextChangedEventArgs(value));
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private static bool AreAllLinesUnchanged(DiffPaneModel differences)
+        {
+            return differences.Lines.All(l => l.Type == ChangeType.Unchanged);
         }
 
         #endregion

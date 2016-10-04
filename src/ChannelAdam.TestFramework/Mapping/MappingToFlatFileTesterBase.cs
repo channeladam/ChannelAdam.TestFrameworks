@@ -23,6 +23,7 @@ namespace ChannelAdam.TestFramework.Mapping
 
     using Abstractions;
     using ChannelAdam.Logging;
+    using DiffPlex.DiffBuilder.Model;
 
     public abstract class MappingToFlatFileTesterBase : IHasExpectedOutputFlatFileContents, IHasActualOutputFlatFileContents
     {
@@ -46,13 +47,28 @@ namespace ChannelAdam.TestFramework.Mapping
             this.textTester = new TextTester(logAsserter);
             this.textTester.ActualTextChangedEvent += this.TextTester_ActualTextChangedEvent;
             this.textTester.ExpectedTextChangedEvent += this.TextTester_ExpectedTextChangedEvent;
+            this.textTester.TextDifferenceDetectedEvent += this.TextTester_TextDifferenceDetectedEvent;
         }
 
         ~MappingToFlatFileTesterBase()
         {
             this.textTester.ActualTextChangedEvent -= this.TextTester_ActualTextChangedEvent;
             this.textTester.ExpectedTextChangedEvent -= this.TextTester_ExpectedTextChangedEvent;
+            this.textTester.TextDifferenceDetectedEvent -= this.TextTester_TextDifferenceDetectedEvent;
         }
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when a text difference is detected, allowing a listener to filter the differences and
+        /// change the Line[x].Type to ChangeType.UnChanged so that the difference is no longer treated as a difference.
+        /// </summary>
+        /// <remarks>
+        /// This event or the TextDifferenceFilter property can be used for this purpose.
+        /// </remarks>
+        public event EventHandler<TextDifferenceDetectedEventArgs> TextDifferenceDetectedEvent;
 
         #endregion
 
@@ -69,6 +85,16 @@ namespace ChannelAdam.TestFramework.Mapping
         {
             get { return this.textTester.ExpectedText; }
         }
+
+        /// <summary>
+        /// Gets or sets the Action delegate to be invoked when a text difference is detected, allowing differences to be filtered out by
+        /// changing the Line[x].Type to ChangeType.UnChanged - so that a difference is no longer treated as a difference.
+        /// </summary>
+        /// <value>The Action delegate.</value>
+        /// <remarks>
+        /// This property or TextDifferenceDetectedEvent can be used for this purpose.
+        /// </remarks>
+        public Action<DiffPaneModel> TextDifferenceFilter { get; set; }
 
         protected ILogAsserter LogAssert { get; private set; }
 
@@ -124,12 +150,22 @@ namespace ChannelAdam.TestFramework.Mapping
         /// <summary>
         /// Assert the Actual Output flat file contents against the Expected Output flat file contents.
         /// </summary>
-        public void AssertActualOutputFlatFileContentsEqualsExpectedOutputFlatFileContents()
+        public virtual void AssertActualOutputFlatFileContentsEqualsExpectedOutputFlatFileContents()
         {
             this.textTester.AssertActualTextEqualsExpectedText();
         }
 
         #endregion
+
+        #endregion
+
+        #region Protected Change Methods
+
+        protected virtual void OnTextDifferenceDetected(DiffPaneModel differences)
+        {
+            this.TextDifferenceFilter?.Invoke(differences);
+            this.TextDifferenceDetectedEvent?.Invoke(this, new TextDifferenceDetectedEventArgs(differences));
+        }
 
         #endregion
 
@@ -145,6 +181,11 @@ namespace ChannelAdam.TestFramework.Mapping
         {
             this.Logger.Log();
             this.Logger.Log($"The expected output flat file contents of the map is: {Environment.NewLine}{e.Text}");
+        }
+
+        private void TextTester_TextDifferenceDetectedEvent(object sender, TextDifferenceDetectedEventArgs e)
+        {
+            this.OnTextDifferenceDetected(e.Differences);
         }
 
         #endregion
