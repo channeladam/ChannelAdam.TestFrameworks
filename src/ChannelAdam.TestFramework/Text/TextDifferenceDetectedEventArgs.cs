@@ -15,7 +15,7 @@
 // limitations under the License.
 //-----------------------------------------------------------------------
 
-namespace ChannelAdam.TestFramework
+namespace ChannelAdam.TestFramework.Text
 {
     using System;
 

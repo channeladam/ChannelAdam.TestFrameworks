@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ChannelAdam.TestFramework")]
-[assembly: AssemblyCopyright("Copyright © 2014-2015 Adam Craven")]
+[assembly: AssemblyCopyright("Copyright © 2014-2016 Adam Craven")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -52,5 +52,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]                  // Assembly strong name version
-[assembly: AssemblyFileVersion("1.6.1.0")]              // File version
-[assembly: AssemblyInformationalVersion("1.6.1")]       // NuGet package version / NuSpec $version$
+[assembly: AssemblyFileVersion("1.7.0.0")]              // File version
+[assembly: AssemblyInformationalVersion("1.7.0")]       // NuGet package version / NuSpec $version$

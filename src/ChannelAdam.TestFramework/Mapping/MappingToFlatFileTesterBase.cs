@@ -24,6 +24,7 @@ namespace ChannelAdam.TestFramework.Mapping
     using Abstractions;
     using ChannelAdam.Logging;
     using DiffPlex.DiffBuilder.Model;
+    using Text;
 
     public abstract class MappingToFlatFileTesterBase : IHasExpectedOutputFlatFileContents, IHasActualOutputFlatFileContents
     {

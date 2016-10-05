@@ -15,7 +15,7 @@
 // limitations under the License.
 //-----------------------------------------------------------------------
 
-namespace ChannelAdam.TestFramework
+namespace ChannelAdam.TestFramework.Text
 {
     using System;
     using System.Linq;
@@ -26,7 +26,6 @@ namespace ChannelAdam.TestFramework
     using DiffPlex.DiffBuilder.Model;
     using Logging;
     using Reflection;
-    using Text;
     using Text.Abstractions;
 
     public class TextTester
