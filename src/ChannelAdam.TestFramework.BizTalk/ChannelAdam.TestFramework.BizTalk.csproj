@@ -44,19 +44,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ChannelAdam.TestFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9fcb9bb550152cab, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChannelAdam.TestFramework.1.6.1\lib\net40\ChannelAdam.TestFramework.dll</HintPath>
+      <HintPath>..\packages\ChannelAdam.TestFramework.1.7.0\lib\net40\ChannelAdam.TestFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DiffPlex, Version=1.2.0.0, Culture=neutral, PublicKeyToken=1d35e91d1bd7bc0f, processorArchitecture=MSIL">
       <HintPath>..\packages\DiffPlex.1.2.1\lib\portable-net40+sl50+win+wpa81+wp80\DiffPlex.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.BizTalk.ExplorerOM">
-      <HintPath>Lib\BizTalk2010\Developer Tools\Microsoft.BizTalk.ExplorerOM.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.BizTalk.TestTools, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.BizTalk.ExplorerOM, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\BizTalk2010\Microsoft.BizTalk.TestTools.dll</HintPath>
+      <HintPath>Lib\BizTalk2010\Developer Tools\Microsoft.BizTalk.ExplorerOM.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.BizTalk.TOM, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -83,9 +80,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BtsCatalogExplorerExtensions.cs" />
     <Compile Include="BizTalkXmlToFlatFileMapTester.cs" />
     <Compile Include="BizTalkFlatFileToFlatFileMapTester.cs" />
-    <Compile Include="BizTalkOperationsHelper.cs" />
+    <Compile Include="BizTalkExplorer.cs" />
     <Compile Include="BizTalkFlatFileToXmlMapTester.cs" />
     <Compile Include="Helpers\BizTalkMapSchemaUtility.cs" />
     <Compile Include="Helpers\BizTalkXmlFlatFileAdapter.cs" />
@@ -97,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ChannelAdam.TestFramework.BizTalk.nuspec" />
     <None Include="ChannelAdam.TestFramework.BizTalk.snk" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

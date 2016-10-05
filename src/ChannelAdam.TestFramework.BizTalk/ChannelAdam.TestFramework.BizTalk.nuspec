@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>ChannelAdam.TestFramework.BizTalk</id>
+    <version>1.0.0</version>
+    <title>ChannelAdam Test Framework Library for BizTalk</title>
+    <authors>Adam Craven</authors>
+    <owners>Adam Craven</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://channeladamtestframeworks.codeplex.com</projectUrl>
+    <iconUrl>https://devzone.channeladam.com/img/channeladam/channeladam-logo.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>A automated testing library for testing BizTalk 2010/2013/2016 artifacts.</description>
+    <releaseNotes>
+1.0.0 - Initial release with support for testing BizTalk maps (XML and flat file).
+    </releaseNotes>
+    <copyright>Copyright 2016 Adam Craven</copyright>
+    <tags>Tests BizTalk Maps XML FlatFile</tags>
+    <dependencies>
+      <dependency id="ChannelAdam.TestFramework" version="1.7.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\**\ChannelAdam.TestFramework.BizTalk.dll" target="lib" />
+    <file src="bin\Release\**\ChannelAdam.TestFramework.BizTalk.pdb" target="lib" />
+    <file src="**\*.cs" exclude="obj\**\*;bin\**\*" target="src" />
+  </files>
+</package>

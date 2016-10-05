@@ -116,7 +116,8 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
         {
             if (map == null) throw new ArgumentNullException(nameof(map));
 
-            return map.GetType().GetCustomAttributes(typeof(Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute), false)
+            return map.GetType()
+                .GetCustomAttributes(typeof(Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute), false)
                 .Cast<Microsoft.XLANGs.BaseTypes.SchemaReferenceAttribute>();
         }
 

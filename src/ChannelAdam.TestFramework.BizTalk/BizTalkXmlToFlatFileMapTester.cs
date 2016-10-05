@@ -65,11 +65,9 @@ namespace ChannelAdam.TestFramework.BizTalk
                 BizTalkXmlMapTestValidator.ValidateInputXml(map, this.InputXml, this.Logger);
             }
 
-            Logger.Log("Executing the map " + map.GetType().Name);
+            Logger.Log("Executing the BizTalk map (XML to flat file) " + map.GetType().Name);
             string outputXmlString = BizTalkXmlMapExecutor.PerformTransform(map, this.InputXml);
-            LogAssert.IsTrue("There was output from the map", !string.IsNullOrWhiteSpace(outputXmlString));
-            Logger.Log();
-            Logger.Log("Map completed");
+            LogAssert.IsTrue("XML output from the BizTalk map exists", !string.IsNullOrWhiteSpace(outputXmlString));
 
             var actualOutputXml = XElement.Parse(outputXmlString);
 
@@ -85,8 +83,12 @@ namespace ChannelAdam.TestFramework.BizTalk
             }
             else
             {
+                Logger.Log("Converting the XML output of the BizTalk map to a flat file");
                 this.ActualOutputFlatFileContents = BizTalkXmlFlatFileAdapter.ConvertOutputXmlToOutputFlatFileContents(map, actualOutputXml, validateOutput);
             }
+
+            Logger.Log();
+            Logger.Log("BizTalk map (XML to flat file) execution completed");
         }
 
         #endregion

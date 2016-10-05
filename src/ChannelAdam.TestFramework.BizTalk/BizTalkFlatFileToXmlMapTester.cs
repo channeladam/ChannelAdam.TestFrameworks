@@ -69,11 +69,11 @@ namespace ChannelAdam.TestFramework.BizTalk
                 BizTalkXmlMapTestValidator.ValidateInputXml(map, inputXml, this.Logger);
             }
 
-            Logger.Log("Executing the map " + map.GetType().Name);
+            Logger.Log("Executing the BizTalk map (flat file to XML) " + map.GetType().Name);
             string outputXml = BizTalkXmlMapExecutor.PerformTransform(map, inputXml);
-            LogAssert.IsTrue("There was output from the map", !string.IsNullOrWhiteSpace(outputXml));
+            LogAssert.IsTrue("XML output from the BizTalk map exists", !string.IsNullOrWhiteSpace(outputXml));
             Logger.Log();
-            Logger.Log("Map completed");
+            Logger.Log("BizTalk map (flat file to XML) execution completed");
 
             base.SetActualOutputXmlFromXmlString(outputXml);
 

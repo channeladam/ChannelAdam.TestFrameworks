@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BizTalkOperationsHelper.cs">
+// <copyright file="BizTalkExplorer.cs">
 //     Copyright (c) 2016 Adam Craven. All rights reserved.
 // </copyright>
 //
@@ -22,9 +22,9 @@ namespace ChannelAdam.TestFramework.BizTalk
     using Microsoft.BizTalk.ExplorerOM;
     using System;
 
-    public static class BizTalkOperationsHelper
+    public static class BizTalkExplorer
     {
-        public static BtsCatalogExplorer GetBizTalkExplorer(string managementDatabaseConnectionString)
+        public static BtsCatalogExplorer CreateBizTalkCatalogExplorer(string managementDatabaseConnectionString)
         {
             var explorer = new BtsCatalogExplorer
             {
@@ -34,14 +34,14 @@ namespace ChannelAdam.TestFramework.BizTalk
             return explorer;
         }
 
-        public static Application GetBizTalkApplication(string applicationName, BtsCatalogExplorer explorer)
+        public static Application FindBizTalkApplication(string applicationName, BtsCatalogExplorer explorer)
         {
             if (explorer == null) throw new ArgumentNullException(nameof(explorer));
 
             return explorer.Applications[applicationName];
         }
 
-        public static Application GetBizTalkApplicationContainingOrchestration(string orchestrationFullName, BtsCatalogExplorer explorer)
+        public static Application FindBizTalkApplicationContainingOrchestration(string orchestrationFullName, BtsCatalogExplorer explorer)
         {
             if (explorer == null) throw new ArgumentNullException(nameof(explorer));
 

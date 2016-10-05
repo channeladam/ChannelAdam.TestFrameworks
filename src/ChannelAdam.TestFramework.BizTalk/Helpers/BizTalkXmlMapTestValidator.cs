@@ -40,7 +40,7 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
             if (inputXml == null) throw new ArgumentNullException(nameof(inputXml));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
 
-            logger.Log("Validating the input XML");
+            logger.Log("Validating the input XML for the BizTalk map");
             ValidateXml(inputXml.ToString(), map.SourceSchemas, BizTalkMapSchemaUtility.GetSchemaReferenceAttributes(map));
         }
 
@@ -50,7 +50,7 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
             if (outputXml == null) throw new ArgumentNullException(nameof(outputXml));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
 
-            logger.Log("Validating the output XML");
+            logger.Log("Validating the output XML from the BizTalk map");
             ValidateXml(outputXml.ToString(), map.TargetSchemas, BizTalkMapSchemaUtility.GetSchemaReferenceAttributes(map));
         }
 
