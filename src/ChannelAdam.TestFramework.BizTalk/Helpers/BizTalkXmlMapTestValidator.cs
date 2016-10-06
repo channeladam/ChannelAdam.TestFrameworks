@@ -112,8 +112,14 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
             if (!schemaTreeWithLoadedSchema.ValidateInstance(flatFileFilename, Microsoft.BizTalk.TOM.OutputInstanceType.Native, schemaClassName, out validationErrors, out xmlOutput))
             {
-                var messages = validationErrors?.Select(e => $"Line:{e.LineNumber} Position:{e.LinePosition} {(e.IsWarning ? "Warning: " : "Error: ")} {e.ErrorInfo}");
-                var message = string.Join(". " + Environment.NewLine, messages);
+                string message = "No details provided.";
+
+                if (validationErrors != null)
+                {
+                    var messages = validationErrors.Select(e => $"Line:{e.LineNumber} Position:{e.LinePosition} {(e.IsWarning ? "Warning: " : "Error: ")} {e.ErrorInfo}");
+                    message = string.Join(". " + Environment.NewLine, messages);
+                }
+
                 throw new InvalidDataException($"An error occurred while parsing/validating the contents of the flat file, or converting it to XML: {Environment.NewLine}{message}");
             }
 
