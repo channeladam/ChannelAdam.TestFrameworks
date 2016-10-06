@@ -84,7 +84,7 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
             if (!targetSchemaTree.CreateNativeInstanceFromXMLInstance(outputXmlFilename, outputFlatFileFilename, out creationErrors))
             {
-                var messages = creationErrors.Select(e => $"Line:{e.LineNumber} Position:{e.LinePosition} {(e.IsWarning ? "Warning: " : "Error: ")} {e.ErrorInfo}");
+                var messages = creationErrors?.Select(e => $"Line:{e.LineNumber} Position:{e.LinePosition} {(e.IsWarning ? "Warning: " : "Error: ")} {e.ErrorInfo}");
                 var message = string.Join(". " + Environment.NewLine, messages);
                 throw new InvalidDataException($"An error occurred while converting from XML to a flat file format: {Environment.NewLine}{message}");
             }

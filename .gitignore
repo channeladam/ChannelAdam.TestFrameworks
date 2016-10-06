@@ -25,3 +25,5 @@
 /src/ChannelAdam.TestFramework.BehaviourSpecs/bin/Debug
 /src/ChannelAdam.TestFramework.BehaviourSpecs/obj/Debug
 /src/ChannelAdam.TestFramework.Nancy/obj/Debug
+/src/ChannelAdam.TestFramework.BizTalk/bin/Release/net40
+/src/ChannelAdam.TestFramework.BizTalk/obj/Release
