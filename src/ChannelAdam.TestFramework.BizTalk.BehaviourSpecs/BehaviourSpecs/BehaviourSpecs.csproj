@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B42A76F8-D3C0-4CF8-9287-58E15C8B7928}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BehaviourSpecs</RootNamespace>
+    <AssemblyName>BehaviourSpecs</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ChannelAdam.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5cc5a4db964eb79, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChannelAdam.Core.1.4.2\lib\net40\ChannelAdam.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ChannelAdam.TestFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9fcb9bb550152cab, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChannelAdam.TestFramework.1.7.0\lib\net40\ChannelAdam.TestFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ChannelAdam.TestFramework.BizTalk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=79d09099c5ae2045, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChannelAdam.TestFramework.BizTalk.1.0.2\lib\net40\ChannelAdam.TestFramework.BizTalk.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ChannelAdam.TestFramework.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=16c0e755d7e669f9, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChannelAdam.TestFramework.MSTest.1.1.3\lib\net40\ChannelAdam.TestFramework.MSTest.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DiffPlex, Version=1.2.0.0, Culture=neutral, PublicKeyToken=1d35e91d1bd7bc0f, processorArchitecture=MSIL">
+      <HintPath>..\packages\DiffPlex.1.2.1\lib\portable-net40+sl50+win+wpa81+wp80\DiffPlex.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.XLANGs.BaseTypes, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="TechTalk.SpecFlow">
+      <HintPath>..\packages\SpecFlow.1.9.0\lib\net35\TechTalk.SpecFlow.dll</HintPath>
+    </Reference>
+    <Reference Include="xmlunit-core, Version=2.2.0.90, Culture=neutral, PublicKeyToken=e7d7e3088fd452f6, processorArchitecture=MSIL">
+      <HintPath>..\packages\XMLUnit.Core.2.2.0\lib\net35\xmlunit-core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BizTalkMapping.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BizTalkMapping.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BizTalkMappingUnitSteps.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="BizTalkMapping.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>BizTalkMapping.feature.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+    <EmbeddedResource Include="TestData\ExpectedFlatFileOutput.csv" />
+    <EmbeddedResource Include="TestData\FlatFileInput.csv" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\ExpectedXmlOutput.xml" />
+    <EmbeddedResource Include="TestData\XmlInput.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SampleBizTalkMapHelpers\SampleBizTalkMapHelpers.csproj">
+      <Project>{461047C8-2895-4A2C-B5FF-62326C634D4D}</Project>
+      <Name>SampleBizTalkMapHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SampleBizTalkMaps\SampleBizTalkMaps.btproj">
+      <Project>{0428EC8A-53B4-4AB3-AA66-BBD2FFC06F08}</Project>
+      <Name>SampleBizTalkMaps</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

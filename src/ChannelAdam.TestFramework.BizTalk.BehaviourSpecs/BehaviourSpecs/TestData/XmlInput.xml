@@ -1,0 +1,7 @@
+﻿<ns0:Request xmlns:ns0="http://SampleBizTalkMaps.Schemas.XmlRequest">
+  <Key>Key_0</Key>
+  <StringValue>StringValue_0</StringValue>
+  <DateTimeValue>1999-05-31T13:20:00.000-05:00</DateTimeValue>
+  <IntegerValue>100</IntegerValue>
+  <DecimalValue>10.4</DecimalValue>
+</ns0:Request>
