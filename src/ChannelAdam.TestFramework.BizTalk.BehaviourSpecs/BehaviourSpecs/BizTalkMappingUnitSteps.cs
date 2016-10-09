@@ -1,10 +1,13 @@
 ﻿using System;
-using System.Xml.Linq;
-using ChannelAdam.Reflection;
 using ChannelAdam.TestFramework.BizTalk;
+using ChannelAdam.TestFramework.BizTalk.Helpers;
 using ChannelAdam.TestFramework.MSTest;
+using SampleBizTalkMapHelpers;
 using SampleBizTalkMaps.Maps;
 using TechTalk.SpecFlow;
+using System.Collections.Generic;
+using Moq;
+using SampleBizTalkMapHelpers.Abstractions;
 
 namespace BehaviourSpecs
 {
@@ -23,6 +26,9 @@ namespace BehaviourSpecs
         private BizTalkFlatFileToXmlMapTester flatFileToXmlMapTester;
         private BizTalkFlatFileToFlatFileMapTester flatFileToFlatFileMapTester;
 
+        private Mock<IGuidHelper> mockGuidHelper;
+        private List<XsltExtensionObjectDescriptor> mocksOfExternalAssemblyClassesUsedInMaps;
+
         #region Before / After
 
         [BeforeScenario()]
@@ -32,6 +38,8 @@ namespace BehaviourSpecs
             this.xmlToFlatFileMapTester = new BizTalkXmlToFlatFileMapTester(base.LogAssert);
             this.flatFileToXmlMapTester = new BizTalkFlatFileToXmlMapTester(base.LogAssert);
             this.flatFileToFlatFileMapTester = new BizTalkFlatFileToFlatFileMapTester(base.LogAssert);
+
+            CreateMockGuidHelper();
         }
 
         #endregion
@@ -73,37 +81,25 @@ namespace BehaviourSpecs
         [When(@"the xml to xml map is performed")]
         public void WhenTheXmlToXmlMapIsPerformed()
         {
-            this.xmlToXmlMapTester.TestMap(new MapXmlToXml());
+            this.xmlToXmlMapTester.TestMap(new MapXmlToXml(), this.mocksOfExternalAssemblyClassesUsedInMaps);
         }
 
         [When(@"the xml to flat file map is performed")]
         public void WhenTheXmlToFlatFileMapIsPerformed()
         {
-            try
-            {
-
-                this.xmlToFlatFileMapTester.TestMap(new MapXmlToFlatFile());
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                throw;
-            }
-
-
+            this.xmlToFlatFileMapTester.TestMap(new MapXmlToFlatFile(), this.mocksOfExternalAssemblyClassesUsedInMaps);
         }
 
         [When(@"the flat file to xml map is performed")]
         public void WhenTheFlatFileToXmlMapIsPerformed()
         {
-            this.flatFileToXmlMapTester.TestMap(new MapFlatFileToXml());
+            this.flatFileToXmlMapTester.TestMap(new MapFlatFileToXml(), this.mocksOfExternalAssemblyClassesUsedInMaps);
         }
 
         [When(@"the flat file to flat file map is performed")]
         public void WhenTheFlatFileToFlatFileMapIsPerformed()
         {
-            this.flatFileToFlatFileMapTester.TestMap(new MapFlatFileToFlatFile());
+            this.flatFileToFlatFileMapTester.TestMap(new MapFlatFileToFlatFile(), this.mocksOfExternalAssemblyClassesUsedInMaps);
         }
 
         #endregion
@@ -132,6 +128,23 @@ namespace BehaviourSpecs
         public void ThenTheFlatFileOutputFromAFlatFileToFlatFileMapIsCorrect()
         {
             this.flatFileToFlatFileMapTester.AssertActualOutputFlatFileContentsEqualsExpectedOutputFlatFileContents();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void CreateMockGuidHelper()
+        {
+            this.mockGuidHelper = base.MyMockRepository.Create<IGuidHelper>();
+            this.mockGuidHelper.Setup(m => m.NewGuid())
+                .Returns("FAKE_GUID");
+
+            // Mock the external assembly GuidHelper class used in the map ;)
+            this.mocksOfExternalAssemblyClassesUsedInMaps = new List<XsltExtensionObjectDescriptor>
+                {
+                    new XsltExtensionObjectDescriptor(typeof(GuidHelper), this.mockGuidHelper.Object)
+                };
         }
 
         #endregion

@@ -1,10 +1,18 @@
-﻿namespace SampleBizTalkMapHelpers
+﻿using System;
+using SampleBizTalkMapHelpers.Abstractions;
+
+namespace SampleBizTalkMapHelpers
 {
-    public class GuidHelper
+    public class GuidHelper : IGuidHelper
     {
-        public static string NewGuid()
+        public string NewGuid()
         {
-            return "FAKE_GUID";
+            return Guid.NewGuid().ToString();
+        }
+
+        public string Echo(string value)
+        {
+            return value;
         }
     }
 }

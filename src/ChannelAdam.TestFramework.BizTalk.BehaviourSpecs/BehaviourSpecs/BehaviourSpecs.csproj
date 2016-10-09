@@ -42,7 +42,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ChannelAdam.TestFramework.BizTalk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=79d09099c5ae2045, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChannelAdam.TestFramework.BizTalk.1.0.2\lib\net40\ChannelAdam.TestFramework.BizTalk.dll</HintPath>
+      <HintPath>..\packages\ChannelAdam.TestFramework.BizTalk.1.0.3\lib\net40\ChannelAdam.TestFramework.BizTalk.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ChannelAdam.TestFramework.MSTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=16c0e755d7e669f9, processorArchitecture=MSIL">
@@ -88,7 +88,9 @@
     <Compile Include="BizTalkMappingUnitSteps.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="BizTalkMapping.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>BizTalkMapping.feature.cs</LastGenOutput>
