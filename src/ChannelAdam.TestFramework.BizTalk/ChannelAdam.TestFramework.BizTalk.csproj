@@ -53,13 +53,14 @@
     </Reference>
     <Reference Include="Microsoft.BizTalk.ExplorerOM, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\BizTalk2010\Developer Tools\Microsoft.BizTalk.ExplorerOM.dll</HintPath>
+      <HintPath>Lib\BizTalk2010\Microsoft.BizTalk.ExplorerOM.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.BizTalk.TOM, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\BizTalk2010\Microsoft.BizTalk.TOM.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.XLANGs.BaseTypes">
+    <Reference Include="Microsoft.XLANGs.BaseTypes, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\BizTalk2010\Microsoft.XLANGs.BaseTypes.dll</HintPath>
     </Reference>
     <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
