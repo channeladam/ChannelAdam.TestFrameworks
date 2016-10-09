@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ChannelAdam.TestFramework.BizTalk</id>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <title>ChannelAdam Test Framework Library for BizTalk</title>
     <authors>Adam Craven</authors>
     <owners>Adam Craven</owners>
@@ -12,6 +12,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>A automated testing library for testing BizTalk 2010/2013/2016 artifacts.</description>
     <releaseNotes>
+1.0.3 - Added ability mock out external assembly classes when executing map tests.
 1.0.2 - Fixed issue when error occurs in BizTalk libraries and when they don't set their output parameters appropriately.
 1.0.1 - Fixed issue when error occurs in BizTalk libraries and when they don't set their output parameters appropriately.
 1.0.0 - Initial release with support for testing BizTalk maps (XML and flat file).

@@ -91,6 +91,7 @@
     <Compile Include="Helpers\BizTalkXmlMapExecutor.cs" />
     <Compile Include="BizTalkXmlToXmlMapTester.cs" />
     <Compile Include="Helpers\BizTalkMapSchemaArtifactLoader.cs" />
+    <Compile Include="Helpers\XsltExtensionObjectDescriptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

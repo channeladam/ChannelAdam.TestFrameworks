@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]                  // Assembly strong name version
-[assembly: AssemblyFileVersion("1.0.2.0")]              // File version
-[assembly: AssemblyInformationalVersion("1.0.2")]       // NuGet package version / NuSpec $version$
+[assembly: AssemblyFileVersion("1.0.3.0")]              // File version
+[assembly: AssemblyInformationalVersion("1.0.3")]       // NuGet package version / NuSpec $version$

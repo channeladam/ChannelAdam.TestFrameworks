@@ -24,6 +24,7 @@ namespace ChannelAdam.TestFramework.BizTalk
     using Helpers;
     using Mapping;
     using Microsoft.XLANGs.BaseTypes;
+    using System.Collections.Generic;
 
     public class BizTalkXmlToFlatFileMapTester : MappingFromXmlToFlatFileTester
     {
@@ -42,12 +43,22 @@ namespace ChannelAdam.TestFramework.BizTalk
         #region Public Methods
 
         /// <summary>
-        /// Tests the map and performs validation on both the input and output XML.
+        /// Tests the map and performs validation on both the input XML and output.
         /// </summary>
         /// <param name="map">The map.</param>
         public void TestMap(TransformBase map)
         {
             TestMap(map, true, true);
+        }
+
+        /// <summary>
+        /// Tests the map and performs validation on both the input XML and output.
+        /// </summary>
+        /// <param name="map">The map.</param>
+        /// <param name="xsltExtensionObjectOverrides">The overrides for the XSLT arguments - allowing you to mock external assembly methods.</param>
+        public void TestMap(TransformBase map, IEnumerable<XsltExtensionObjectDescriptor> xsltExtensionObjectOverrides)
+        {
+            TestMap(map, xsltExtensionObjectOverrides, true, true);
         }
 
         /// <summary>
@@ -58,6 +69,18 @@ namespace ChannelAdam.TestFramework.BizTalk
         /// <param name="validateOutput">if set to <c>true</c> then the output is validated.</param>
         public void TestMap(TransformBase map, bool validateInputXml, bool validateOutput)
         {
+            TestMap(map, null, validateInputXml, validateOutput);
+        }
+
+        /// <summary>
+        /// Tests the map.
+        /// </summary>
+        /// <param name="map">The map to execute.</param>
+        /// <param name="xsltExtensionObjectOverrides">The overrides for the XSLT arguments - allowing you to mock external assembly methods.</param>
+        /// <param name="validateInputXml">if set to <c>true</c> then the input XML is validated.</param>
+        /// <param name="validateOutput">if set to <c>true</c> then the output is validated.</param>
+        public void TestMap(TransformBase map, IEnumerable<XsltExtensionObjectDescriptor> xsltExtensionObjectOverrides, bool validateInputXml, bool validateOutput)
+        {
             if (map == null) throw new ArgumentNullException(nameof(map));
 
             if (validateInputXml)
@@ -66,7 +89,7 @@ namespace ChannelAdam.TestFramework.BizTalk
             }
 
             Logger.Log("Executing the BizTalk map (XML to flat file) " + map.GetType().Name);
-            string outputXmlString = BizTalkXmlMapExecutor.PerformTransform(map, this.InputXml);
+            string outputXmlString = BizTalkXmlMapExecutor.PerformTransform(map, xsltExtensionObjectOverrides, this.InputXml);
             LogAssert.IsTrue("XML output from the BizTalk map exists", !string.IsNullOrWhiteSpace(outputXmlString));
 
             var actualOutputXml = XElement.Parse(outputXmlString);

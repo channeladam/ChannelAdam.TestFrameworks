@@ -25,6 +25,8 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
     using System.Xml.Xsl;
 
     using Microsoft.XLANGs.BaseTypes;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public static class BizTalkXmlMapExecutor
     {
@@ -37,6 +39,63 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
         /// <param name="inputXml"></param>
         /// <returns>The resulting XML output from the map.</returns>
         public static string PerformTransform(TransformBase map, XNode inputXml)
+        {
+            return PerformTransform(map, map?.TransformArgs, inputXml);
+        }
+
+        /// <summary>
+        /// Perform the transform using the map.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="xsltExtensionObjectOverrides">Overrides the extension objects in the map with the specified types.</param>
+        /// <param name="inputXml"></param>
+        /// <returns>The resulting XML output from the map.</returns>
+        public static string PerformTransform(TransformBase map, IEnumerable<XsltExtensionObjectDescriptor> xsltExtensionObjectOverrides, XNode inputXml)
+        {
+            if (map == null) throw new ArgumentNullException(nameof(map));
+
+            XsltArgumentList xsltArguments = map.TransformArgs;      // map.TransformArgs is immutable and created each time the property is called ;)
+
+            if (xsltExtensionObjectOverrides != null)
+            {
+                ApplyXsltExtensionObjectOverridesToXsltArguments(xsltArguments, xsltExtensionObjectOverrides, map);
+            }
+
+            return PerformTransform(map, xsltArguments, inputXml);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private static void ApplyXsltExtensionObjectOverridesToXsltArguments(XsltArgumentList transformArgs, IEnumerable<XsltExtensionObjectDescriptor> xsltExtensionObjectOverrides, TransformBase map)
+        {
+            var xsltArgumentListContent = XElement.Parse(map.XsltArgumentListContent);
+
+            foreach (var item in xsltExtensionObjectOverrides)
+            {
+                var name = FindNamespaceForXsltExtensionObjectType(xsltArgumentListContent, item.ClassType);
+                transformArgs.RemoveExtensionObject(name);
+                transformArgs.AddExtensionObject(name, item.Instance);
+            }
+        }
+
+        private static string FindNamespaceForXsltExtensionObjectType(XElement xsltArgumentListContent, Type classType)
+        {
+            return xsltArgumentListContent.Descendants("ExtensionObject")
+                    .Where(el => (string)el.Attribute("ClassName") == classType.FullName)
+                    .Select(el => el.Attribute("Namespace").Value)
+                    .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Perform the transform using the map.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="xsltArguments"></param>
+        /// <param name="inputXml"></param>
+        /// <returns>The resulting XML output from the map.</returns>
+        private static string PerformTransform(TransformBase map, XsltArgumentList xsltArguments, XNode inputXml)
         {
             if (map == null) throw new ArgumentNullException(nameof(map));
             if (inputXml == null) throw new ArgumentNullException(nameof(inputXml));
@@ -55,7 +114,7 @@ namespace ChannelAdam.TestFramework.BizTalk.Helpers
 
                     using (var results = XmlWriter.Create(sb, settings))
                     {
-                        transform.Transform(input, map.TransformArgs, results);
+                        transform.Transform(input, xsltArguments, results);
                     }
 
                     return sb.ToString();
