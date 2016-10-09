@@ -31,7 +31,7 @@ namespace BehaviourSpecs
 
         #region Before / After
 
-        [BeforeScenario()]
+        [BeforeScenario]
         public void BeforeScenario()
         {
             this.xmlToXmlMapTester = new BizTalkXmlToXmlMapTester(base.LogAssert);
@@ -40,6 +40,14 @@ namespace BehaviourSpecs
             this.flatFileToFlatFileMapTester = new BizTalkFlatFileToFlatFileMapTester(base.LogAssert);
 
             CreateMockGuidHelper();
+        }
+
+        [AfterScenario]
+        public void AfterScenario()
+        {
+            Logger.Log();
+            Logger.Log("Verifying all mock expectations were met");
+            MyMockRepository.VerifyAll();
         }
 
         #endregion
@@ -136,9 +144,12 @@ namespace BehaviourSpecs
 
         private void CreateMockGuidHelper()
         {
+            Logger.Log("Setting up mock to return 'FAKE_GUID' every time GuidHelper.NewGuid() is called");
+
             this.mockGuidHelper = base.MyMockRepository.Create<IGuidHelper>();
             this.mockGuidHelper.Setup(m => m.NewGuid())
-                .Returns("FAKE_GUID");
+                .Returns("FAKE_GUID")
+                .Verifiable();
 
             // Mock the external assembly GuidHelper class used in the map ;)
             this.mocksOfExternalAssemblyClassesUsedInMaps = new List<XsltExtensionObjectDescriptor>
