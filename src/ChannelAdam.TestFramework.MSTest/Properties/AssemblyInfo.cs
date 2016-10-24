@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="AssemblyInfo.cs">
-//     Copyright (c) 2014-2015 Adam Craven. All rights reserved.
+//     Copyright (c) 2014-2016 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ChannelAdam.TestFramework.MSTest")]
-[assembly: AssemblyCopyright("Copyright © 2014-2015 Adam Craven")]
+[assembly: AssemblyCopyright("Copyright © 2014-2016 Adam Craven")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -36,7 +36,7 @@ using System.Runtime.InteropServices;
 // to COM components.  If you need to access a type in this assembly from
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
-[assembly: CLSCompliant(true)]
+[assembly: CLSCompliant(false)]         // DiffPaneModel is not.
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("031f8c82-5bc4-4568-b907-99911b4fd037")]
@@ -52,5 +52,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]                  // Assembly strong name version
-[assembly: AssemblyFileVersion("1.1.3.0")]              // File version
-[assembly: AssemblyInformationalVersion("1.1.3")]       // NuGet package version / NuSpec $version$
+[assembly: AssemblyFileVersion("1.2.0.0")]              // File version
+[assembly: AssemblyInformationalVersion("1.2.0")]       // NuGet package version / NuSpec $version$

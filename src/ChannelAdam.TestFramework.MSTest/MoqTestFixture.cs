@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="MoqTestFixture.cs">
-//     Copyright (c) 2014 Adam Craven. All rights reserved.
+//     Copyright (c) 2014-2016 Adam Craven. All rights reserved.
 // </copyright>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,24 +17,28 @@
 
 namespace ChannelAdam.TestFramework.MSTest
 {
-    using System;
-
     using ChannelAdam.Logging;
     using ChannelAdam.TestFramework;
-
-    using Moq;
 
     /// <summary>
     /// Abstract class to inherit for using Moq.
     /// </summary>
     public abstract class MoqTestFixture : ChannelAdam.TestFramework.MoqTestFixture
     {
-        private static ILogAsserter logAssert = new LogAssert();
+        private static readonly ILogAsserter LogAsserter = new LogAssert();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoqTestFixture" /> class.
         /// </summary>
-        protected MoqTestFixture() : base(logAssert)
+        protected MoqTestFixture() : base(LogAsserter)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MoqTestFixture" /> class.
+        /// </summary>
+        /// <param name="logger">The logger to use.</param>
+        protected MoqTestFixture(ISimpleLogger logger) : base(logger, LogAsserter)
         {
         }
     }
