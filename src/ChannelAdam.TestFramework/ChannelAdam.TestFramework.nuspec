@@ -10,7 +10,7 @@
     <projectUrl>https://channeladamtestframeworks.codeplex.com</projectUrl>
     <iconUrl>https://devzone.channeladam.com/img/channeladam/channeladam-logo.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>A foundational automated testing library designed to make it easier to implement test cases and to read their output. Includes helpers for testing XML differences.</description>
+    <description>A foundational automated testing library designed to make it easier to implement test cases and to read their output. Includes helpers for testing XML and text differences.</description>
     <releaseNotes>
 1.7.1 - Minor changes to the logging in the XML and Text testers and fixed accessors of map tester constructors to be public.
 1.7.0 - Fixed namespace of TextTester and TextDifferenceDetectedEventArgs.
