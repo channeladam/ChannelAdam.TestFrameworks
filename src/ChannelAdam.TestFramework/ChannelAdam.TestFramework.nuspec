@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ChannelAdam.TestFramework</id>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
     <title>ChannelAdam Test Framework Library</title>
     <authors>Adam Craven</authors>
     <owners>Adam Craven</owners>
@@ -12,6 +12,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>A foundational automated testing library designed to make it easier to implement test cases and to read their output. Includes helpers for testing XML differences.</description>
     <releaseNotes>
+1.7.1 - Minor changes to the logging in the XML and Text testers and fixed accessors of map tester constructors to be public.
 1.7.0 - Fixed namespace of TextTester and TextDifferenceDetectedEventArgs.
 1.6.1 - Added ability to override/filter text differences.
 1.6.0 - Corrected assembly version. Renamed Xml.XmlMapTesterBase to Mapping.MappingToXmlTesterBase. Renamed Xml.XmlMapTester to Mapping.MappingFromXmlToXmlTester. Added TextTester and flat file map testers.

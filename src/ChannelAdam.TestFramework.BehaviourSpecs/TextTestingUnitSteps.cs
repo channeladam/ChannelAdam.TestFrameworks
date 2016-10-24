@@ -81,8 +81,7 @@ attached to its horn.");
         [When(@"the two text samples are compared")]
         public void WhenTheTwoTextSamplesAreCompared()
         {
-            Logger.Log("Text #1: {0}", this.textTester.ExpectedText);
-            Logger.Log("Text #2: {0}", this.textTester.ActualText);
+            Logger.Log("Comparing...");
             this.isEqual = textTester.IsEqual();
         }
 

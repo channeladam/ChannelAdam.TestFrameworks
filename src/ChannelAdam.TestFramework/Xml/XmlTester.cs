@@ -342,12 +342,30 @@ namespace ChannelAdam.TestFramework.Xml
 
         protected virtual void OnExpectedXmlChanged(XNode value)
         {
-            this.ExpectedXmlChangedEvent?.Invoke(this, new XmlChangedEventArgs(value));
+            if (this.ExpectedXmlChangedEvent == null)
+            {
+                // Only log the details if the event has not been subscribed to - because it is expected that the subscriber instead will log with more contextual detail
+                this.logger.Log();
+                this.logger.Log($"The expected XML is: {Environment.NewLine}{value?.ToString()}");
+            }
+            else
+            {
+                this.ExpectedXmlChangedEvent.Invoke(this, new XmlChangedEventArgs(value));
+            }
         }
 
         protected virtual void OnActualXmlChanged(XNode value)
         {
-            this.ActualXmlChangedEvent?.Invoke(this, new XmlChangedEventArgs(value));
+            if (this.ActualXmlChangedEvent == null)
+            {
+                // Only log the details if the event has not been subscribed to - because it is expected that the subscriber instead will log with more contextual detail
+                this.logger.Log();
+                this.logger.Log($"The actual XML is: {Environment.NewLine}{value?.ToString()}");
+            }
+            else
+            {
+                this.ActualXmlChangedEvent.Invoke(this, new XmlChangedEventArgs(value));
+            }
         }
 
         #endregion

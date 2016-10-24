@@ -258,12 +258,30 @@ namespace ChannelAdam.TestFramework.Text
 
         protected virtual void OnExpectedTextChanged(string value)
         {
-            this.ExpectedTextChangedEvent?.Invoke(this, new TextChangedEventArgs(value));
+            if (this.ExpectedTextChangedEvent == null)
+            {
+                // Only log the details if the event has not been subscribed to - because it is expected that the subscriber instead will log with more contextual detail
+                this.logger.Log();
+                this.logger.Log($"The expected text is: {Environment.NewLine}{value}");
+            }
+            else
+            {
+                this.ExpectedTextChangedEvent.Invoke(this, new TextChangedEventArgs(value));
+            }
         }
 
         protected virtual void OnActualTextChanged(string value)
         {
-            this.ActualTextChangedEvent?.Invoke(this, new TextChangedEventArgs(value));
+            if (this.ActualTextChangedEvent == null)
+            {
+                // Only log the details if the event has not been subscribed to - because it is expected that the subscriber instead will log with more contextual detail
+                this.logger.Log();
+                this.logger.Log($"The actual text is: {Environment.NewLine}{value}");
+            }
+            else
+            {
+                this.ActualTextChangedEvent.Invoke(this, new TextChangedEventArgs(value));
+            }
         }
 
         #endregion

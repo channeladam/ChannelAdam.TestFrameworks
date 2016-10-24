@@ -28,11 +28,11 @@ namespace ChannelAdam.TestFramework.Mapping
     {
         #region Constructor / Destructor
 
-        protected MappingFromFlatFileToFlatFileTester(ILogAsserter logAsserter) : base(logAsserter)
+        public MappingFromFlatFileToFlatFileTester(ILogAsserter logAsserter) : base(logAsserter)
         {
         }
 
-        protected MappingFromFlatFileToFlatFileTester(ISimpleLogger logger, ILogAsserter logAsserter) : base(logger, logAsserter)
+        public MappingFromFlatFileToFlatFileTester(ISimpleLogger logger, ILogAsserter logAsserter) : base(logger, logAsserter)
         {
         }
 

@@ -62,8 +62,7 @@
         [When(@"the two xml samples are compared")]
         public void WhenTheTwoXmlSamplesAreCompared()
         {
-            Logger.Log("Xml #1: {0}", this.xmlTester.ExpectedXml);
-            Logger.Log("Xml #2: {0}", this.xmlTester.ActualXml);
+            Logger.Log("Comparing...");
             this.isEqual = xmlTester.IsEqual();
         }
 

@@ -28,10 +28,11 @@ namespace ChannelAdam.TestFramework
     /// </summary>
     public abstract class TestEasy
     {
+        private readonly ExpectedExceptionDescriptor expectedException;
+
         private ISimpleLogger logger;
         private ILogAsserter logAssert;
         private Exception actualException;
-        private ExpectedExceptionDescriptor expectedException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestEasy" /> class.
@@ -134,7 +135,7 @@ namespace ChannelAdam.TestFramework
         {
             if (action == null)
             {
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             }
 
             try
@@ -155,7 +156,7 @@ namespace ChannelAdam.TestFramework
         {
             if (action == null)
             {
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             }
 
             try
