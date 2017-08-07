@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>ChannelAdam.TestFramework.NUnit</id>
+    <version>3.0.0</version>
+    <title>ChannelAdam Test Framework Library for NUnit</title>
+    <authors>Adam Craven</authors>
+    <owners>Adam Craven</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/channeladam/ChannelAdam.TestFrameworks</projectUrl>
+    <iconUrl>https://devzone.channeladam.com/img/channeladam/channeladam-logo.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>A foundational automated testing library designed to make it easier to implement test cases with NUnit and to read their output.</description>
+    <releaseNotes>
+3.0.0 - Initial release targeting .NET Framework 4.0/4.5 and NUnit 3. Major version numbers will correspond with NUnit's major version.
+    </releaseNotes>
+    <copyright>Copyright 2017 Adam Craven</copyright>
+    <tags>Tests Unit Integration Moq NUnit</tags>
+    <dependencies>
+      <dependency id="ChannelAdam.TestFramework" version="1.7.1" />
+      <dependency id="NUnit" version="3.7.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\**\ChannelAdam.TestFramework.NUnit.dll" target="lib" />
+    <file src="bin\Release\**\ChannelAdam.TestFramework.NUnit.pdb" target="lib" />
+    <file src="**\*.cs" exclude="obj\**\*;bin\**\*" target="src" />
+  </files>
+</package>

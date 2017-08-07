@@ -29,3 +29,8 @@
 /src/ChannelAdam.TestFramework.BizTalk.BehaviourSpecs/BehaviourSpecs/obj/Debug
 /src/ChannelAdam.TestFramework.BizTalk.BehaviourSpecs/SampleBizTalkMapHelpers/bin/Debug
 /src/ChannelAdam.TestFramework.BizTalk.BehaviourSpecs/SampleBizTalkMapHelpers/obj/Debug
+/.vs
+/src/ChannelAdam.TestFramework.BehaviourSpecs/obj/Release
+/src/ChannelAdam.TestFramework.NUnit/bin
+/src/ChannelAdam.TestFramework.NUnit/obj
+/src/ChannelAdam.TestFramework.NUnit/packages
