@@ -1,5 +1,17 @@
 # ChannelAdam.TestFrameworks
 
+## DEPRECATION NOTICE
+This full .NET framework library has been deprecated.
+
+The functionality has been refactored out into the following ChannelAdam .NET Standard libraries.
+- https://github.com/channeladam/ChannelAdam.TestFramework
+- https://github.com/channeladam/ChannelAdam.TestFramework.Moq
+- https://github.com/channeladam/ChannelAdam.TestFramework.Text
+- https://github.com/channeladam/ChannelAdam.TestFramework.Xml
+
+
+## Description
+
 .NET libraries that provide handy functionality for writing automated tests and reading their output, using Moq and MSTest.
 
 Download the "ChannelAdam Test Framework Library" NuGet package - https://www.nuget.org/packages/ChannelAdam.TestFramework and see the reference documentation https://devzone.channeladam.com/library/channeladam-testframeworks.
