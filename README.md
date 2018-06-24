@@ -1,9 +1,11 @@
 # ChannelAdam.TestFrameworks
 
 ## DEPRECATION NOTICE
-The full .NET framework libraries in this repo have been deprecated (apart from the BizTalk ones).
+This repo has been deprecated.
 
-The functionality has been refactored out into the following ChannelAdam .NET Standard libraries.
+The full .NET framework libraries in this repo (apart from the BizTalk one) have been deprecated.
+
+The functionality of those libraries have been refactored out into the following ChannelAdam .NET Standard libraries.
 - https://github.com/channeladam/ChannelAdam.TestFramework
 - https://github.com/channeladam/ChannelAdam.TestFramework.Moq
 - https://github.com/channeladam/ChannelAdam.TestFramework.MSTest
@@ -11,6 +13,8 @@ The functionality has been refactored out into the following ChannelAdam .NET St
 - https://github.com/channeladam/ChannelAdam.TestFramework.NUnit
 - https://github.com/channeladam/ChannelAdam.TestFramework.Text
 - https://github.com/channeladam/ChannelAdam.TestFramework.Xml
+
+The BizTalk code has been moved to this repo: https://github.com/channeladam/ChannelAdam.TestFramework.BizTalk.
 
 
 ## Description
